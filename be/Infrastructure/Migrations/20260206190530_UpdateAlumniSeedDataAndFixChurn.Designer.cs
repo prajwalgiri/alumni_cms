@@ -3,6 +3,7 @@ using System;
 using Alumni.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alumni.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260206190530_UpdateAlumniSeedDataAndFixChurn")]
+    partial class UpdateAlumniSeedDataAndFixChurn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -106,7 +109,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2012,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/260130cMuobOb7fU99qcjY1hd7ysVmjagS9Ou8ETWr1wfJ.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/260130cMuobOb7fU99qcjY1hd7ysVmjagS9Ou8ETWr1wfJ.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("262be63e-1085-4841-8f55-7d52f6f43e57")
                         },
@@ -120,7 +123,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2009,
                             IsPublic = true,
                             Major = "Management (Spring)",
-                            ProfileImageUrl = "/assets/alumni/230711TU3VafOtLh5aRPPnE7K7khxxsdYAW4f0TZ55rTmz.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230711TU3VafOtLh5aRPPnE7K7khxxsdYAW4f0TZ55rTmz.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("7df0d247-72b6-4a45-83ad-854f62885a3c")
                         },
@@ -134,7 +137,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2016,
                             IsPublic = true,
                             Major = "Management (Spring)",
-                            ProfileImageUrl = "/assets/alumni/230726RVftrcSYYvDxNl5EOR9ZywIkL2gaSDu9iEbkBywD.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230726RVftrcSYYvDxNl5EOR9ZywIkL2gaSDu9iEbkBywD.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("c269770f-e72b-469c-8202-cf562889338f")
                         },
@@ -148,7 +151,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2008,
                             IsPublic = true,
                             Major = "Management (Spring)",
-                            ProfileImageUrl = "/assets/alumni/230749AahWf0XDDBeTaY2GJXb7WHbsNHEnrcFuKQPOKQ7l.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230749AahWf0XDDBeTaY2GJXb7WHbsNHEnrcFuKQPOKQ7l.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("8c507611-ba56-47e5-944a-d72c0ff97f14")
                         },
@@ -162,7 +165,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2018,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/2307015CrcA60NoIF75HWklcOnQjlI4oGZEeoPyKZnMvD0.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/2307015CrcA60NoIF75HWklcOnQjlI4oGZEeoPyKZnMvD0.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("0fa9c369-f455-4639-a49d-c0a595093503")
                         },
@@ -176,7 +179,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2010,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/230708doIrG9ehcGUxX7l1eBGcm1k7AvNko3qd8GT3uJSy.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230708doIrG9ehcGUxX7l1eBGcm1k7AvNko3qd8GT3uJSy.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("eabb525a-a90d-4421-b8b6-5c8e793d9868")
                         },
@@ -190,7 +193,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2010,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/230744SuzF29NWTbjx7HBKPZGTYcnyfkbb6HIzfRBd5pw0.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230744SuzF29NWTbjx7HBKPZGTYcnyfkbb6HIzfRBd5pw0.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("adcdaf28-d599-436e-a78b-d0d286114e14")
                         },
@@ -204,7 +207,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2018,
                             IsPublic = true,
                             Major = "Management (Spring)",
-                            ProfileImageUrl = "/assets/alumni/230737KbmeeEeKIqDfSvKv9Sm3UTkGA8SqDDcINndQiIyj.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230737KbmeeEeKIqDfSvKv9Sm3UTkGA8SqDDcINndQiIyj.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("c0e39cd3-bb8a-477a-90ea-54a7fd912d68")
                         },
@@ -218,7 +221,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2012,
                             IsPublic = true,
                             Major = "Management (Spring)",
-                            ProfileImageUrl = "/assets/alumni/2307443y7Oa8YaGyBJTCDSTtbfYh3woN3UoY3gcua3gBT8.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/2307443y7Oa8YaGyBJTCDSTtbfYh3woN3UoY3gcua3gBT8.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("9179496d-1613-40b0-bdcf-0795ed6456a6")
                         },
@@ -232,7 +235,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2017,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/230754Dzg5yB66hFc8H2EvdwnNlU5uHvbGSmYcwxQ0nZZp.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230754Dzg5yB66hFc8H2EvdwnNlU5uHvbGSmYcwxQ0nZZp.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("d3c0a3f9-96c9-469b-b2e8-4e853f7f92e9")
                         },
@@ -246,7 +249,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2011,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/230724m2q4sicJw9ukuqW13tUzbgZB1pdiRLiuMMeVvtT0.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230724m2q4sicJw9ukuqW13tUzbgZB1pdiRLiuMMeVvtT0.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("1bc2175e-8d66-405d-b382-2d2edb25539e")
                         },
@@ -260,7 +263,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2023,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/230824FC3p60guGsbQgzdHEf2KD5sMrikr61guyIb7MriU.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/230824FC3p60guGsbQgzdHEf2KD5sMrikr61guyIb7MriU.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("1061ef5b-6102-44fa-8240-6b544739e585")
                         },
@@ -274,7 +277,7 @@ namespace Alumni.Infrastructure.Migrations
                             GraduationYear = 2012,
                             IsPublic = true,
                             Major = "Management (Fall)",
-                            ProfileImageUrl = "/assets/alumni/250546VKQkQDtndyp4ZS7FVAZJBTlyQmVQgVkv0hIqO1ij.jpg",
+                            ProfileImageUrl = "https://saim.edu.np/storage/uploads/alumni/250546VKQkQDtndyp4ZS7FVAZJBTlyQmVQgVkv0hIqO1ij.jpg",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = new Guid("b153cfcd-5b55-473c-8aeb-bc40d779ffba")
                         });
@@ -410,7 +413,7 @@ namespace Alumni.Infrastructure.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 2, 6, 19, 13, 15, 254, DateTimeKind.Utc).AddTicks(9502))
+                        .HasDefaultValue(new DateTime(2026, 2, 6, 19, 5, 29, 415, DateTimeKind.Utc).AddTicks(1475))
                         .HasColumnName("registration_date");
 
                     b.Property<int>("Status")

@@ -230,10 +230,13 @@ public static class SeedData
             rolePermissions.Add(new RolePermission(alumniRole.Id, permission.Id));
         }
 
-        // Set dates for role permissions
+        // Set dates and IDs for role permissions
+        var rpCount = 1;
         foreach (var rolePermission in rolePermissions)
         {
+            rolePermission.Id = Guid.Parse($"00000000-0000-0000-1111-{rpCount++:D12}");
             rolePermission.CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            rolePermission.UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
 
         modelBuilder.Entity<RolePermission>().HasData(rolePermissions);
@@ -303,10 +306,13 @@ public static class SeedData
             roleNavigations.Add(new RoleNavigation(alumniRole.Id, navItem.Id));
         }
 
-        // Set dates for role navigations
+        // Set dates and IDs for role navigations
+        var rnCount = 1;
         foreach (var roleNavigation in roleNavigations)
         {
+            roleNavigation.Id = Guid.Parse($"00000000-0000-0000-2222-{rnCount++:D12}");
             roleNavigation.CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            roleNavigation.UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         }
 
         modelBuilder.Entity<RoleNavigation>().HasData(roleNavigations);
