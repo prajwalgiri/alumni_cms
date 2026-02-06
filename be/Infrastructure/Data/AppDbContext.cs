@@ -281,5 +281,6 @@ public class AppDbContext : DbContext
         
         // Seed data
         SeedData.Seed(modelBuilder);
+        AlumniSeed.Seed(modelBuilder);
     }
 }
