@@ -28,7 +28,7 @@ We welcome contributions from the community! To maintain a high standard of qual
 ### Tech Stack
 - **Frontend:** SvelteKit (TypeScript), Tailwind CSS.
 - **Backend:** .NET 8 (C#), Entity Framework Core, MediatR.
-- **Database:** PostgreSQL.
+- **Database:** SQLite.
 
 ### Coding Standards
 - **Clean Architecture:** Adhere to the established layers: Domain, Application, Infrastructure, and WebAPI.

@@ -10,7 +10,7 @@ The **Integrated Member Management & Engagement Infrastructure (IMMEI)** is a co
 ## Technical Stack
 - **Frontend:** SvelteKit 2.0, Tailwind CSS, Lucide Svelte, pnpm.
 - **Backend:** .NET 8.0 (Clean Architecture), ASP.NET Core Web API, MediatR (CQRS), FluentValidation.
-- **Database:** PostgreSQL with Entity Framework Core.
+- **Database:** SQLite with Entity Framework Core.
 - **Authentication:** JWT-based token authentication with BCrypt password hashing.
 - **Infrastructure:** Docker and Docker Compose support for simplified deployment.
 
@@ -18,35 +18,40 @@ The **Integrated Member Management & Engagement Infrastructure (IMMEI)** is a co
 
 ## Core Features Status
 
-### 1. Authentication & Security (✅ Completed)
+### 1. Landing Page & Public Presence (✅ Completed)
+- **Organization Info:** Dedicated landing page explaining the organization's mission and vision.
+- **Event Highlights:** Display of upcoming and recent events on the home page.
+- **Public Access:** Clean, informative interface for non-authenticated visitors.
+
+### 2. Authentication & Security (✅ Completed)
 - JWT-based authentication system.
 - Secure user registration and login.
 - Role-Based Access Control (RBAC) with 5 predefined roles (SuperAdmin, Admin, Staff, Alumni, Moderator).
 - Granular permission system (25+ predefined permissions).
 
-### 2. Member/Alumni Management (✅ Completed / 🏗️ In Progress)
+### 3. Member/Alumni Management (✅ Completed / 🏗️ In Progress)
 - **Profile Management:** CRUD operations for alumni profiles.
 - **Public Directory:** A public-facing gallery of alumni with search and filtering capabilities (by year, major, location).
 - **Privacy Controls:** Support for public and private profile settings.
 - **Portfolio Features:** (🏗️ *In Progress*) Enhancing profiles to allow members to showcase their thoughts, work, and professional portfolios.
 
-### 3. Event Management (✅ Completed)
+### 4. Event Management (✅ Completed)
 - Full CRUD operations for events.
 - Support for both physical (offline) and virtual (online) events.
 - Event registration system with attendee limits and status tracking (Pending, Confirmed, Cancelled).
 - Real-time attendee count management.
 
-### 4. Dynamic Navigation System (✅ Completed)
+### 5. Dynamic Navigation System (✅ Completed)
 - Database-driven navigation groups and items.
 - Role-based navigation filtering (users only see what they are permitted to).
 - Hierarchical (nested) navigation support.
 
-### 5. Content Management & Notices (⚠️ Partially Implemented)
+### 6. Content Management & Notices (⚠️ Partially Implemented)
 - **Navigation/Permissions:** Ready in the database and frontend layouts.
 - **Backend Implementation:** (🏗️ *In Progress*) News and notices entity and API are being migrated to the .NET backend.
 - **Public Notices:** Capability to show organizational announcements publicly.
 
-### 6. Subscription & Payment Integration (⏳ Backlog)
+### 7. Subscription & Payment Integration (⏳ Backlog)
 - Planned for future implementation to manage member subscriptions and fees.
 
 ---
