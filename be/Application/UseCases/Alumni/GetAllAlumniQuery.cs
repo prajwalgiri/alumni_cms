@@ -30,6 +30,10 @@ public class GetAllAlumniQueryHandler : IRequestHandler<GetAllAlumniQuery, ApiRe
             CurrentCompany = a.CurrentCompany,
             CurrentPosition = a.CurrentPosition,
             Location = a.Location,
+            Bio = a.Bio,
+            LinkedinUrl = a.LinkedinUrl,
+            GithubUrl = a.GithubUrl,
+            WebsiteUrl = a.WebsiteUrl,
             ProfileImageUrl = a.ProfileImageUrl
         }).ToList();
 

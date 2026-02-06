@@ -1,5 +1,5 @@
 // API service for backend communication
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = "http://localhost:5337";
 
 export interface ApiResponse<T> {
 	success: boolean;
@@ -51,6 +51,23 @@ export interface Alumni {
 	isPublic: boolean;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface AlumniListItem {
+	id: string;
+	firstName: string;
+	lastName: string;
+	graduationYear: number;
+	degree: string;
+	major: string;
+	currentCompany?: string;
+	currentPosition?: string;
+	location?: string;
+	bio?: string;
+	linkedinUrl?: string;
+	githubUrl?: string;
+	websiteUrl?: string;
+	profileImageUrl?: string;
 }
 
 export interface CreateAlumniRequest {
@@ -210,8 +227,8 @@ class ApiService {
 	}
 
 	// Alumni endpoints
-	async getAlumni(): Promise<ApiResponse<Alumni[]>> {
-		return this.request<Alumni[]>("/api/alumni");
+	async getAlumni(): Promise<ApiResponse<AlumniListItem[]>> {
+		return this.request<AlumniListItem[]>("/api/alumni");
 	}
 
 	async getAlumniById(id: string): Promise<ApiResponse<Alumni>> {

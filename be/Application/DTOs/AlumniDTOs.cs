@@ -62,5 +62,9 @@ public class AlumniListResponse
     public string? CurrentCompany { get; set; }
     public string? CurrentPosition { get; set; }
     public string? Location { get; set; }
+    public string? Bio { get; set; }
+    public string? LinkedinUrl { get; set; }
+    public string? GithubUrl { get; set; }
+    public string? WebsiteUrl { get; set; }
     public string? ProfileImageUrl { get; set; }
 }
