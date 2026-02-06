@@ -30,7 +30,7 @@ This document outlines the high-level features and a granular, sprint-based road
 ### Sprint 2: Member Portfolio & Gallery Expansion
 **Goal:** Enhance Alumni profiles to support "Thoughts and Work" and improve the gallery view.
 
-*   **Task 2.1 (BE):** Extend `Alumni` entity with `PortfolioItems` (SQLite JSON column or separate table) and `ProfessionalThoughts`.
+*   **Task 2.1 (BE):** Extend `Alumni` entity with `PortfolioItems` (JSONB or separate table) and `ProfessionalThoughts`.
 *   **Task 2.2 (BE):** Update DTOs and MediatR handlers for Alumni profile updates.
 *   **Task 2.3 (FE):** Redesign the Alumni Profile edit page to include Portfolio/Thoughts sections.
 *   **Task 2.4 (FE):** Update the Public Alumni Gallery (`/alumni`) to display a preview of portfolio highlights.
