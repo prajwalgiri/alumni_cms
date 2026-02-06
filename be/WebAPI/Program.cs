@@ -7,7 +7,21 @@ using Microsoft.OpenApi.Models;
 using Sentry;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseSentry();
+builder.WebHost.UseSentry(o =>
+{
+    // Configure Sentry from appsettings.json
+    o.Dsn = builder.Configuration["Sentry:Dsn"];
+    o.Debug = builder.Environment.IsDevelopment();
+    o.TracesSampleRate = 1.0;
+    o.ProfilesSampleRate = 1.0;
+
+    // Environment-specific overrides
+    if (builder.Environment.IsDevelopment())
+    {
+        o.SendDefaultPii = true;
+        o.MaxRequestBodySize = Sentry.Extensibility.RequestSize.Always;
+    }
+});
 
 // Add services to the container
 builder.Services.AddControllers();
