@@ -262,9 +262,9 @@ public static class SeedData
             roleNavigations.Add(new RoleNavigation(superAdminRole.Id, navItem.Id));
         }
 
-        // Admin gets most navigation except system settings
+        // Admin gets most navigation including system settings
         var adminNavItems = navigationItems.Where(n => 
-            !n.Url.StartsWith("/admin/settings")
+            !n.Url.StartsWith("/admin/settings") || n.Url == "/admin/settings"
         ).ToList();
 
         foreach (var navItem in adminNavItems)
