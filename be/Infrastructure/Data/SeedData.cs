@@ -13,6 +13,7 @@ public static class SeedData
         var staffRole = new Role("Staff", "Staff member with limited administrative access", true);
         var alumniRole = new Role("Alumni", "Alumni member with basic access", true);
         var moderatorRole = new Role("Moderator", "Content moderator with approval rights", true);
+        var adminMngrRole = new Role("ADMINMNGR", "Admin Manager with full administrative access", true);
 
         // Set specific IDs and dates for seeding
         superAdminRole.Id = Guid.Parse("11111111-1111-1111-1111-111111111111");
@@ -35,12 +36,17 @@ public static class SeedData
         moderatorRole.CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         moderatorRole.UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+        adminMngrRole.Id = Guid.Parse("66666666-6666-6666-6666-666666666666");
+        adminMngrRole.CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        adminMngrRole.UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
         modelBuilder.Entity<Role>().HasData(
             superAdminRole,
             adminRole,
             staffRole,
             alumniRole,
-            moderatorRole
+            moderatorRole,
+            adminMngrRole
         );
 
         // Seed Permissions
@@ -230,6 +236,12 @@ public static class SeedData
             rolePermissions.Add(new RolePermission(alumniRole.Id, permission.Id));
         }
 
+        // ADMINMNGR gets all permissions
+        foreach (var permission in permissions)
+        {
+            rolePermissions.Add(new RolePermission(adminMngrRole.Id, permission.Id));
+        }
+
         // Set dates and IDs for role permissions
         var rpCount = 1;
         foreach (var rolePermission in rolePermissions)
@@ -306,6 +318,12 @@ public static class SeedData
             roleNavigations.Add(new RoleNavigation(alumniRole.Id, navItem.Id));
         }
 
+        // ADMINMNGR gets all navigation
+        foreach (var navItem in navigationItems)
+        {
+            roleNavigations.Add(new RoleNavigation(adminMngrRole.Id, navItem.Id));
+        }
+
         // Set dates and IDs for role navigations
         var rnCount = 1;
         foreach (var roleNavigation in roleNavigations)
@@ -320,7 +338,7 @@ public static class SeedData
         // Seed sample users with roles
         var sampleUsers = new List<User>
         {
-            new User("admin@alumni.com", "$2a$11$dgxpRa4JM9Le0QH1kUmy7earThhdxfWeICblOMyqzxgAtzKQQ2BaC", "Admin", "User", superAdminRole.Id) 
+            new User("admin@alumni.com", "$2a$11$dgxpRa4JM9Le0QH1kUmy7earThhdxfWeICblOMyqzxgAtzKQQ2BaC", "Admin", "User", adminMngrRole.Id)
             { 
                 Id = Guid.Parse("a1111111-1111-1111-1111-111111111111"),
                 CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),

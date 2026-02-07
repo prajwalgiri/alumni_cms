@@ -131,7 +131,7 @@
 				<div class="flex-1 min-w-0">
 					<p class="text-sm font-medium text-gray-900 truncate">{user?.firstName} {user?.lastName}</p>
 					<p class="text-xs text-gray-500 truncate">{user?.email}</p>
-					<p class="text-xs text-primary-600 font-medium">Administrator</p>
+					<p class="text-xs text-primary-600 font-medium">{user?.roleName === 'ADMINMNGR' ? 'Admin Manager' : 'Administrator'}</p>
 				</div>
 			</div>
 			<div class="flex items-center space-x-2">
@@ -190,7 +190,7 @@
 					<div class="hidden md:flex items-center space-x-3">
 						<div class="text-right">
 							<p class="text-sm font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
-							<p class="text-xs text-gray-500">Administrator</p>
+							<p class="text-xs text-gray-500">{user?.roleName === 'ADMINMNGR' ? 'Admin Manager' : 'Administrator'}</p>
 						</div>
 						<div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
 							<span class="text-white text-sm font-medium">

@@ -44,7 +44,7 @@ public class SettingsController : ControllerBase
     }
 
     [HttpPut("{key}")]
-    [Authorize(Roles = "Admin,SuperAdmin")]
+    [Authorize(Roles = "Admin,SuperAdmin,ADMINMNGR")]
     public async Task<IActionResult> UpdateSetting(string key, [FromBody] UpdateSettingRequest request)
     {
         try

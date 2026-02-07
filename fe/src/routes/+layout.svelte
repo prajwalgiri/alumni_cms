@@ -17,7 +17,7 @@
 	// Use server-side data as fallback, client-side store as primary
 	$: isAuthenticated = $authStore.isAuthenticated || data.isAuthenticated;
 	$: user = $authStore.user || data.user;
-	$: isAdmin = user?.roleName === 'Admin';
+	$: isAdmin = user?.roleName === 'Admin' || user?.roleName === 'ADMINMNGR';
 	$: isAlumni = user?.roleName === 'Alumni';
 	
 	let mobileMenuOpen = false;
@@ -75,7 +75,12 @@
 								</a>
 							{/if}
 							<div class="flex items-center space-x-2">
-								<span class="text-sm text-gray-700">Welcome, {user?.firstName}</span>
+								<a
+									href={isAdmin ? "/admin" : (isAlumni ? "/dashboard" : "/")}
+									class="text-sm text-gray-700 hover:text-primary-600 font-medium transition-colors"
+								>
+									Welcome, {user?.firstName}
+								</a>
 								<button 
 									onclick={() => authStore.logout()}
 									class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
@@ -146,9 +151,12 @@
 										Dashboard
 									</a>
 								{/if}
-								<div class="px-3 py-2 text-sm text-gray-600">
+								<a
+									href={isAdmin ? "/admin" : (isAlumni ? "/dashboard" : "/")}
+									class="block px-3 py-2 text-base font-medium text-gray-600 hover:text-primary-600"
+								>
 									Welcome, {user?.firstName}
-								</div>
+								</a>
 								<button 
 									onclick={() => authStore.logout()}
 									class="text-gray-700 hover:text-primary-600 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
