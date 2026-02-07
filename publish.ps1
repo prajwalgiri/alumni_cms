@@ -22,8 +22,9 @@ $FeDeployDir = "C:\deploy\alumni\alumni-fe"
 
 # Backend
 $BePath = Join-Path $RepoRoot "be"
-$BePublishCommand = "dotnet publish -c Release -o publish"   # change if Rust etc.
-$BeExeName = "Backend.exe"                            # <-- CHANGE to your exe name
+$BeConfiguration = "Release"
+$BeExeName = "Alumni.WebAPI.exe"   
+# <-- CHANGE to your exe name
 $BePort = 3002
 $BeDeployDir = "C:\deploy\alumni\alumni-be"
 $BePidFile = Join-Path $BeDeployDir "be.pid"
@@ -96,11 +97,11 @@ function Ensure-Port-Free([int]$port) {
 
 function Stop-ByPidFile([string]$pidFile, [string]$label) {
     if (Test-Path $pidFile) {
-        $pid = Get-Content $pidFile -ErrorAction SilentlyContinue
-        if ($pid) {
+        $psid = Get-Content $pidFile -ErrorAction SilentlyContinue
+        if ($psid) {
             try {
-                Write-Log ("Stopping {0} (PID={1}) from pid file..." -f $label, $pid)
-                Stop-Process -Id $pid -Force -ErrorAction Stop
+                Write-Log ("Stopping {0} (PID={1}) from pid file..." -f $label, $psid)
+                Stop-Process -Id $psid -Force -ErrorAction Stop
             }
             catch {
                 Write-Log ("Stop {0} by PID failed (maybe already stopped): {1}" -f $label, $_.Exception.Message)
@@ -206,34 +207,48 @@ else {
 }
 
 Write-Log "FE deployed to: $FeDeployDir"
-
 # -------- BE BUILD + DEPLOY --------
 if (-not (Test-Path $BePath)) { Fail ("Backend path not found: {0}" -f $BePath) }
 
-Write-Log "---- Backend: publish ----"
+Write-Log "---- Backend: publish (temp) ----"
 Exec "$DotnetCmd --version" $BePath
-Exec $BePublishCommand $BePath
 
-Write-Log "---- Backend: deploy ----"
-Stop-ByPidFile $BePidFile "BE"
-Ensure-Port-Free $BePort
+# Publish to a temp directory so nothing is left behind in the repo
+$bePublishTemp = Join-Path $env:TEMP ("be_publish_" + [guid]::NewGuid().ToString("N"))
+Ensure-Dir $bePublishTemp
 
-Copy-Dir (Join-Path $BePath "publish") $BeDeployDir
+try {
+    $bePublishCmd = "$DotnetCmd publish -c $BeConfiguration -o `"$bePublishTemp`""
+    Exec $bePublishCmd $BePath
 
-Write-Log "---- Backend: start ----"
-$beExe = Join-Path $BeDeployDir $BeExeName
-if (-not (Test-Path $beExe)) {
-    $found = Get-ChildItem $BeDeployDir -Filter "*.exe" | Select-Object -First 1
-    if (-not $found) { Fail "Backend exe not found. Set `$BeExeName correctly or ensure publish output includes an .exe." }
-    $beExe = $found.FullName
-    Write-Log ("BE exe auto-detected: {0}" -f $beExe)
+    Write-Log "---- Backend: deploy ----"
+    Stop-ByPidFile $BePidFile "BE"
+    Ensure-Port-Free $BePort
+
+    # Copy temp publish output to deploy folder
+    Copy-Dir $bePublishTemp $BeDeployDir
+
+    Write-Log "---- Backend: start ----"
+    $beExe = Join-Path $BeDeployDir $BeExeName
+    if (-not (Test-Path $beExe)) {
+        $found = Get-ChildItem $BeDeployDir -Filter "*.exe" | Select-Object -First 1
+        if (-not $found) { Fail "Backend exe not found. Set `$BeExeName correctly or ensure publish output includes an .exe." }
+        $beExe = $found.FullName
+        Write-Log ("BE exe auto-detected: {0}" -f $beExe)
+    }
+
+    # For ASP.NET Core. If your BE is Rust or non-.NET, remove ASPNETCORE_URLS.
+    $beArgs = "/c set ASPNETCORE_URLS=http://*:$BePort && `"$beExe`" >> `"$BeRunLog`" 2>&1"
+    $beProc = Start-Process -FilePath "cmd.exe" -ArgumentList $beArgs -PassThru -WindowStyle Hidden
+    $beProc.Id | Out-File -FilePath $BePidFile -Force
+    Write-Log ("BE started. PID={0} Port={1}" -f $beProc.Id, $BePort)
+}
+finally {
+    # Always cleanup temp publish output
+    if (Test-Path $bePublishTemp) {
+        Remove-Item $bePublishTemp -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Log ("Backend temp publish cleaned: {0}" -f $bePublishTemp)
+    }
 }
 
-# Set URL binding env for .NET (change/remove if Rust)
-$beArgs = "/c set ASPNETCORE_URLS=http://*:$BePort && `"$beExe`" >> `"$BeRunLog`" 2>&1"
-$beProc = Start-Process -FilePath "cmd.exe" -ArgumentList $beArgs -PassThru -WindowStyle Hidden
-$beProc.Id | Out-File -FilePath $BePidFile -Force
-Write-Log ("BE started. PID={0} Port={1}" -f $beProc.Id, $BePort)
-
-Write-Log "==== Publish finished successfully ===="
 exit 0
