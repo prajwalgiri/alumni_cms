@@ -3,6 +3,7 @@ using System;
 using Alumni.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alumni.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260207123009_AddSystemSettings")]
+    partial class AddSystemSettings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -410,7 +413,7 @@ namespace Alumni.Infrastructure.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 2, 7, 13, 30, 7, 608, DateTimeKind.Utc).AddTicks(9228))
+                        .HasDefaultValue(new DateTime(2026, 2, 7, 12, 30, 7, 721, DateTimeKind.Utc).AddTicks(4480))
                         .HasColumnName("registration_date");
 
                     b.Property<int>("Status")
@@ -1211,15 +1214,6 @@ namespace Alumni.Infrastructure.Migrations
                             IsSystem = true,
                             Name = "Moderator",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("66666666-6666-6666-6666-666666666666"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Admin Manager with full administrative access",
-                            IsSystem = true,
-                            Name = "ADMINMNGR",
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 
@@ -1539,15 +1533,15 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000036"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000017"),
-                            RoleId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000001"),
+                            RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000037"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000001"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000002"),
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1555,7 +1549,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000038"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000002"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000003"),
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1563,7 +1557,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000039"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000003"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000004"),
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1571,7 +1565,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000040"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000004"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000007"),
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1579,7 +1573,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000041"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000007"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000008"),
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1587,7 +1581,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000042"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000008"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000010"),
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1595,7 +1589,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000043"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000010"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000013"),
                             RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1603,15 +1597,15 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000044"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000013"),
-                            RoleId = new Guid("33333333-3333-3333-3333-333333333333"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000001"),
+                            RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000045"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000001"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000002"),
                             RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1619,7 +1613,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000046"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000002"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000003"),
                             RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1627,7 +1621,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000047"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000003"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000004"),
                             RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1635,7 +1629,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000048"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000004"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000009"),
                             RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1643,7 +1637,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000049"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000009"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000010"),
                             RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1651,7 +1645,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000050"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000010"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000011"),
                             RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1659,7 +1653,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000051"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000011"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000012"),
                             RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1667,15 +1661,15 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000052"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000012"),
-                            RoleId = new Guid("55555555-5555-5555-5555-555555555555"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000001"),
+                            RoleId = new Guid("44444444-4444-4444-4444-444444444444"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000053"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000001"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000002"),
                             RoleId = new Guid("44444444-4444-4444-4444-444444444444"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1683,7 +1677,7 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000054"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000002"),
+                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000003"),
                             RoleId = new Guid("44444444-4444-4444-4444-444444444444"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -1691,168 +1685,8 @@ namespace Alumni.Infrastructure.Migrations
                         {
                             Id = new Guid("00000000-0000-0000-2222-000000000055"),
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000003"),
-                            RoleId = new Guid("44444444-4444-4444-4444-444444444444"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000056"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             NavigationItemId = new Guid("90000000-0000-0000-0000-000000000004"),
                             RoleId = new Guid("44444444-4444-4444-4444-444444444444"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000057"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000058"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000059"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000003"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000060"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000004"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000061"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000005"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000062"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000006"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000063"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000007"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000064"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000008"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000065"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000009"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000066"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000010"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000067"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000011"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000068"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000012"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000069"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000013"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000070"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000014"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000071"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000015"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000072"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000016"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000073"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000017"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000074"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000018"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-2222-000000000075"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NavigationItemId = new Guid("90000000-0000-0000-0000-000000000019"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
@@ -2424,222 +2258,6 @@ namespace Alumni.Infrastructure.Migrations
                             PermissionId = new Guid("40000000-0000-0000-0000-000000000001"),
                             RoleId = new Guid("44444444-4444-4444-4444-444444444444"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000068"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("10000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000069"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("10000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000070"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("10000000-0000-0000-0000-000000000003"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000071"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("10000000-0000-0000-0000-000000000004"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000072"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("20000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000073"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("20000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000074"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("20000000-0000-0000-0000-000000000003"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000075"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("20000000-0000-0000-0000-000000000004"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000076"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("20000000-0000-0000-0000-000000000005"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000077"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("30000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000078"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("30000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000079"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("30000000-0000-0000-0000-000000000003"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000080"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("30000000-0000-0000-0000-000000000004"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000081"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("30000000-0000-0000-0000-000000000005"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000082"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("40000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000083"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("40000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000084"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("40000000-0000-0000-0000-000000000003"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000085"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("40000000-0000-0000-0000-000000000004"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000086"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("40000000-0000-0000-0000-000000000005"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000087"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("50000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000088"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("50000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000089"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("60000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000090"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("60000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000091"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("60000000-0000-0000-0000-000000000003"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000092"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("60000000-0000-0000-0000-000000000004"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000093"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("70000000-0000-0000-0000-000000000001"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("00000000-0000-0000-1111-000000000094"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            PermissionId = new Guid("70000000-0000-0000-0000-000000000002"),
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 
@@ -2662,13 +2280,6 @@ namespace Alumni.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("key");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValue("General")
-                        .HasColumnName("type");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT")
@@ -2693,39 +2304,8 @@ namespace Alumni.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Active color theme for the application",
                             Key = "Theme",
-                            Type = "LandingPage",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Value = "maroon"
-                        },
-                        new
-                        {
-                            Id = new Guid("a0000000-0000-0000-0000-000000000002"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Global application logo",
-                            Key = "LogoUrl",
-                            Type = "LandingPage",
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Value = "/assets/logo.png"
-                        },
-                        new
-                        {
-                            Id = new Guid("a0000000-0000-0000-0000-000000000003"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Application favicon",
-                            Key = "FaviconUrl",
-                            Type = "LandingPage",
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Value = "/favicon.ico"
-                        },
-                        new
-                        {
-                            Id = new Guid("a0000000-0000-0000-0000-000000000004"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "The name of the application",
-                            Key = "SiteName",
-                            Type = "LandingPage",
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Value = "Alumni Network"
+                            Value = "blue"
                         });
                 });
 
@@ -2786,7 +2366,7 @@ namespace Alumni.Infrastructure.Migrations
                             FirstName = "Admin",
                             LastName = "User",
                             PasswordHash = "$2a$11$dgxpRa4JM9Le0QH1kUmy7earThhdxfWeICblOMyqzxgAtzKQQ2BaC",
-                            RoleId = new Guid("66666666-6666-6666-6666-666666666666"),
+                            RoleId = new Guid("11111111-1111-1111-1111-111111111111"),
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new

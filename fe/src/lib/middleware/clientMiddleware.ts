@@ -81,6 +81,7 @@ export class ClientMiddleware {
     switch (roleName) {
       case 'Admin':
       case 'SuperAdmin':
+      case 'ADMINMNGR':
         return '/admin';
       case 'Alumni':
       case 'User':
@@ -93,7 +94,7 @@ export class ClientMiddleware {
   async requireAdmin(): Promise<boolean> {
     return this.checkAuth({
       requireAuth: true,
-      requireRole: ['Admin', 'SuperAdmin'],
+      requireRole: ['Admin', 'SuperAdmin', 'ADMINMNGR'],
       redirectTo: '/dashboard'
     });
   }
@@ -135,7 +136,7 @@ export class ClientMiddleware {
 
   // Check if user is admin
   isAdmin(): boolean {
-    return this.hasRole(['Admin', 'SuperAdmin']);
+    return this.hasRole(['Admin', 'SuperAdmin', 'ADMINMNGR']);
   }
 
   // Check if user is authenticated

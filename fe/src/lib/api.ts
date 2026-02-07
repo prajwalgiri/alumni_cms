@@ -137,6 +137,13 @@ export interface UserNavigation {
 	flatItems: NavigationItem[];
 }
 
+export interface SystemSetting {
+	key: string;
+	value: string;
+	type: string;
+	description?: string;
+}
+
 class ApiService {
 	private baseUrl: string;
 
@@ -312,6 +319,22 @@ class ApiService {
 		roleId: string,
 	): Promise<ApiResponse<UserNavigation>> {
 		return this.request<UserNavigation>(`/api/navigation/role/${roleId}`);
+	}
+
+	// Settings endpoints
+	async getSettings(type?: string): Promise<ApiResponse<SystemSetting[]>> {
+		const endpoint = type ? `/api/settings?type=${type}` : "/api/settings";
+		return this.request<SystemSetting[]>(endpoint);
+	}
+
+	async updateSetting(
+		key: string,
+		value: string,
+	): Promise<ApiResponse<boolean>> {
+		return this.request<boolean>(`/api/settings/${key}`, {
+			method: "PUT",
+			body: JSON.stringify({ value }),
+		});
 	}
 
 	// Utility methods

@@ -7,7 +7,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # API base URL
-API_URL="http://localhost:5000/api"
+API_URL="http://localhost:5037/api"
 
 echo -e "${YELLOW}🧪 Testing Alumni Backend API (.NET)${NC}"
 echo "=================================="
@@ -107,4 +107,4 @@ else
 fi
 
 echo -e "\n${GREEN}✅ API testing completed!${NC}"
-echo -e "${YELLOW}📖 Check the Swagger UI at: http://localhost:5000/swagger${NC}"
+echo -e "${YELLOW}📖 Check the Swagger UI at: http://localhost:5037/swagger${NC}"
