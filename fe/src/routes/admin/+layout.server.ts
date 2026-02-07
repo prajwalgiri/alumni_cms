@@ -8,7 +8,9 @@ export const load: LayoutServerLoad = async ({ locals }) => {
   }
 
   // Check if user has admin role
-  const isAdmin = locals.user.roleName === 'Admin' || locals.user.roleName === 'SuperAdmin';
+  const adminRoles = ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'];
+  const isAdmin = adminRoles.includes(locals.user.roleName);
+
   if (!isAdmin) {
     throw redirect(302, '/dashboard');
   }

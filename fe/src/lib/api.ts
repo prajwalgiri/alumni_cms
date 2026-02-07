@@ -165,11 +165,12 @@ class ApiService {
 
 	private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
 		let data: any;
+		const responseClone = response.clone();
 		try {
 			data = await response.json();
 		} catch (error) {
-			// If response is not JSON, get the text content
-			const textContent = await response.text();
+			// If response is not JSON, get the text content from the clone
+			const textContent = await responseClone.text();
 			console.error("Non-JSON response:", textContent);
 			throw new Error(
 				`Invalid response format: ${response.status} ${response.statusText}`,

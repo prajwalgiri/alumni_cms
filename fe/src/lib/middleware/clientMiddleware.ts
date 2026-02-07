@@ -16,7 +16,7 @@ export class ClientMiddleware {
   private currentUser: User | null = null;
   private isInitialized = false;
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): ClientMiddleware {
     if (!ClientMiddleware.instance) {
@@ -45,7 +45,7 @@ export class ClientMiddleware {
 
     // Check if user is authenticated
     const isAuthenticated = apiService.isAuthenticated();
-    
+
     if (!isAuthenticated) {
       if (requireAuth && !allowUnauthenticated) {
         // Store current path for redirect after login
@@ -64,11 +64,15 @@ export class ClientMiddleware {
     // Check role requirements
     if (requireRole && this.currentUser) {
       const requiredRoles = Array.isArray(requireRole) ? requireRole : [requireRole];
+      console.log(`[Middleware] Checking role access. User Role: '${this.currentUser.roleName}', Required:`, requiredRoles);
+
       const hasRequiredRole = requiredRoles.includes(this.currentUser.roleName);
-      
+
       if (!hasRequiredRole) {
+        console.warn(`[Middleware] Access denied. User role '${this.currentUser.roleName}' not in`, requiredRoles);
         // Redirect based on user's actual role
         const redirectPath = this.getRedirectPathForRole(this.currentUser.roleName);
+        console.log(`[Middleware] Redirecting to: ${redirectPath}`);
         goto(redirectPath);
         return false;
       }
@@ -82,6 +86,8 @@ export class ClientMiddleware {
       case 'Admin':
       case 'SuperAdmin':
       case 'ADMINMNGR':
+      case 'Staff':
+      case 'Moderator':
         return '/admin';
       case 'Alumni':
       case 'User':
@@ -94,7 +100,7 @@ export class ClientMiddleware {
   async requireAdmin(): Promise<boolean> {
     return this.checkAuth({
       requireAuth: true,
-      requireRole: ['Admin', 'SuperAdmin', 'ADMINMNGR'],
+      requireRole: ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'],
       redirectTo: '/dashboard'
     });
   }
@@ -110,14 +116,14 @@ export class ClientMiddleware {
   // Middleware for public routes (redirect authenticated users)
   async requireGuest(): Promise<boolean> {
     const isAuthenticated = apiService.isAuthenticated();
-    
+
     if (isAuthenticated) {
       const user = apiService.getCurrentUserFromStorage();
       const redirectPath = this.getRedirectPathForRole(user?.roleName || 'User');
       goto(redirectPath);
       return false;
     }
-    
+
     return true;
   }
 
@@ -129,14 +135,14 @@ export class ClientMiddleware {
   // Check if user has specific role
   hasRole(role: string | string[]): boolean {
     if (!this.currentUser) return false;
-    
+
     const roles = Array.isArray(role) ? role : [role];
     return roles.includes(this.currentUser.roleName);
   }
 
   // Check if user is admin
   isAdmin(): boolean {
-    return this.hasRole(['Admin', 'SuperAdmin', 'ADMINMNGR']);
+    return this.hasRole(['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator']);
   }
 
   // Check if user is authenticated

@@ -37,8 +37,8 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   // Get the JWT token from cookies
-  const token = event.cookies.get('authToken') || 
-                request.headers.get('authorization')?.replace('Bearer ', '');
+  const token = event.cookies.get('authToken') ||
+    request.headers.get('authorization')?.replace('Bearer ', '');
 
   let user = null;
   let isAuthenticated = false;
@@ -56,7 +56,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         roleName: decoded.roleName
       };
       isAuthenticated = true;
-      
+
       // Add user to event.locals for use in load functions
       event.locals.user = user;
       event.locals.isAuthenticated = true;
@@ -85,7 +85,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   // Handle admin route access
   if (isAdminRoute && isAuthenticated) {
-    const isAdmin = user?.roleName === 'Admin' || user?.roleName === 'SuperAdmin';
+    const adminRoles = ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'];
+    const isAdmin = user?.roleName && adminRoles.includes(user.roleName);
     if (!isAdmin) {
       // Redirect non-admin users to dashboard
       return new Response(null, {
@@ -100,9 +101,10 @@ export const handle: Handle = async ({ event, resolve }) => {
   // Handle authenticated users trying to access auth pages
   if (isAuthenticated && (pathname === '/auth/login' || pathname === '/auth/register')) {
     // Redirect authenticated users to appropriate dashboard
-    const isAdmin = user?.roleName === 'Admin' || user?.roleName === 'SuperAdmin';
+    const adminRoles = ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'];
+    const isAdmin = user?.roleName && adminRoles.includes(user.roleName);
     const redirectTo = isAdmin ? '/admin' : '/dashboard';
-    
+
     return new Response(null, {
       status: 302,
       headers: {

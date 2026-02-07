@@ -16,58 +16,59 @@ function createNavigationStore() {
 
   return {
     subscribe,
-    
+
     async loadUserNavigation() {
       update(state => ({ ...state, loading: true, error: null }));
-      
+
       try {
         const response = await apiService.getUserNavigation();
+        console.log(response, "response nav");
         if (response.success && response.data) {
-          update(state => ({ 
-            ...state, 
-            navigation: response.data, 
-            loading: false 
+          update(state => ({
+            ...state,
+            navigation: response.data ?? null,
+            loading: false
           }));
         } else {
-          update(state => ({ 
-            ...state, 
-            error: response.message || 'Failed to load navigation', 
-            loading: false 
+          update(state => ({
+            ...state,
+            error: response.message || 'Failed to load navigation',
+            loading: false
           }));
         }
       } catch (error) {
         console.error('Navigation loading error:', error);
-        update(state => ({ 
-          ...state, 
-          error: error instanceof Error ? error.message : 'Failed to load navigation', 
-          loading: false 
+        update(state => ({
+          ...state,
+          error: error instanceof Error ? error.message : 'Failed to load navigation',
+          loading: false
         }));
       }
     },
 
     async loadNavigationByRole(roleId: string) {
       update(state => ({ ...state, loading: true, error: null }));
-      
+
       try {
         const response = await apiService.getNavigationByRole(roleId);
         if (response.success && response.data) {
-          update(state => ({ 
-            ...state, 
-            navigation: response.data, 
-            loading: false 
+          update(state => ({
+            ...state,
+            navigation: response.data ?? null,
+            loading: false
           }));
         } else {
-          update(state => ({ 
-            ...state, 
-            error: response.message || 'Failed to load navigation', 
-            loading: false 
+          update(state => ({
+            ...state,
+            error: response.message || 'Failed to load navigation',
+            loading: false
           }));
         }
       } catch (error) {
-        update(state => ({ 
-          ...state, 
-          error: error instanceof Error ? error.message : 'Failed to load navigation', 
-          loading: false 
+        update(state => ({
+          ...state,
+          error: error instanceof Error ? error.message : 'Failed to load navigation',
+          loading: false
         }));
       }
     },
@@ -78,21 +79,21 @@ function createNavigationStore() {
 
     // Helper methods
     getNavigationItems(): NavigationItem[] {
-      let state: NavigationState;
+      let state!: NavigationState;
       const unsubscribe = subscribe(s => { state = s; });
       unsubscribe();
       return state?.navigation?.flatItems || [];
     },
 
     getNavigationGroups(): NavigationGroup[] {
-      let state: NavigationState;
+      let state!: NavigationState;
       const unsubscribe = subscribe(s => { state = s; });
       unsubscribe();
       return state?.navigation?.groups || [];
     },
 
     getMainNavigation(): NavigationItem[] {
-      let state: NavigationState;
+      let state!: NavigationState;
       const unsubscribe = subscribe(s => { state = s; });
       unsubscribe();
       return state?.navigation?.groups
@@ -101,11 +102,11 @@ function createNavigationStore() {
     },
 
     getAdminNavigation(): NavigationItem[] {
-      let state: NavigationState;
+      let state!: NavigationState;
       const unsubscribe = subscribe(s => { state = s; });
       unsubscribe();
       return state?.navigation?.groups
-        .filter(g => ['administration', 'content', 'analytics', 'settings'].some(name => 
+        .filter(g => ['administration', 'content', 'analytics', 'settings'].some(name =>
           g.name.toLowerCase().includes(name)))
         .flatMap(g => g.navigationItems) || [];
     }
