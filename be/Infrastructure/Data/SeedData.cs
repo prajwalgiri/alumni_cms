@@ -341,5 +341,15 @@ public static class SeedData
         };
 
         modelBuilder.Entity<User>().HasData(sampleUsers);
+
+        // Seed System Settings
+        var themeSetting = new SystemSetting("Theme", "blue", "Active color theme for the application")
+        {
+            Id = Guid.Parse("A0000000-0000-0000-0000-000000000001"),
+            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        };
+
+        modelBuilder.Entity<SystemSetting>().HasData(themeSetting);
     }
 }

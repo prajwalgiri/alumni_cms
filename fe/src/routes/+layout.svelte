@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { authStore } from '$lib/stores/auth';
+	import { settingsStore } from '$lib/stores/settings';
 	import { page } from '$app/stores';
 	import { Menu, X, Users, Calendar, Info, Mail, LogIn, UserPlus } from 'lucide-svelte';
 	import Navigation from '$lib/components/Navigation.svelte';
@@ -10,6 +11,7 @@
 
 	onMount(() => {
 		authStore.init();
+		settingsStore.init();
 	});
 
 	// Use server-side data as fallback, client-side store as primary

@@ -31,6 +31,7 @@ public class AppDbContext : DbContext
     public DbSet<NavigationGroup> NavigationGroups { get; set; }
     public DbSet<NavigationItem> NavigationItems { get; set; }
     public DbSet<RoleNavigation> RoleNavigations { get; set; }
+    public DbSet<SystemSetting> SystemSettings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -275,6 +276,21 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(e => new { e.RoleId, e.NavigationItemId }).IsUnique();
+        });
+
+        // SystemSetting configuration
+        modelBuilder.Entity<SystemSetting>(entity =>
+        {
+            entity.ToTable("system_settings");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(e => e.Key).HasColumnName("key").IsRequired();
+            entity.Property(e => e.Value).HasColumnName("value").IsRequired();
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at").IsRequired();
+
+            entity.HasIndex(e => e.Key).IsUnique();
         });
 
         base.OnModelCreating(modelBuilder);

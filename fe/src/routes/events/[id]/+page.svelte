@@ -104,6 +104,8 @@
 		</div>
 	</div>
 {:else if event}
+	{@const status = getEventStatus(event)}
+	{@const regStatus = getRegistrationStatus(event)}
 	<!-- Hero Section -->
 	<section class="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-16">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,7 +126,6 @@
 							{event.description}
 						</p>
 					</div>
-					{@const status = getEventStatus(event)}
 					<span class="ml-6 px-4 py-2 rounded-full text-sm font-medium {status.class}">
 						{status.text}
 					</span>
@@ -278,7 +279,6 @@
 				<div class="lg:col-span-1">
 					<!-- Registration Card -->
 					<div class="bg-gray-50 rounded-lg p-6 mb-6 sticky top-6">
-						{@const regStatus = getRegistrationStatus(event)}
 						<h3 class="text-lg font-semibold text-gray-900 mb-4">Registration</h3>
 						
 						<div class="space-y-4">
