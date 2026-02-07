@@ -286,6 +286,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
             entity.Property(e => e.Key).HasColumnName("key").IsRequired();
             entity.Property(e => e.Value).HasColumnName("value").IsRequired();
+            entity.Property(e => e.Type).HasColumnName("type").IsRequired().HasDefaultValue("General");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.CreatedAt).HasColumnName("created_at").IsRequired();
             entity.Property(e => e.UpdatedAt).HasColumnName("updated_at").IsRequired();

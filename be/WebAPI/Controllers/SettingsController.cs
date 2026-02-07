@@ -18,11 +18,11 @@ public class SettingsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetSettings()
+    public async Task<IActionResult> GetSettings([FromQuery] string? type)
     {
         try
         {
-            var query = new GetSettingsQuery();
+            var query = new GetSettingsQuery { Type = type };
             var result = await _mediator.Send(query);
 
             return Ok(new ApiResponse<List<SystemSettingDTO>>

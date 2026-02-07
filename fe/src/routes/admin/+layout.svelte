@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { apiService } from '$lib/api';
+	import { settingsStore } from '$lib/stores/settings';
 	import Navigation from '$lib/components/Navigation.svelte';
 	import { clientMiddleware } from '$lib/middleware/clientMiddleware';
 	import { 
@@ -28,6 +29,8 @@
 	let user: any = data.user;
 	let sidebarOpen = false;
 	let currentPath = '';
+
+	$: siteName = $settingsStore.settings.find(s => s.key === 'SiteName')?.value || 'Admin CMS';
 	
 	onMount(() => {
 		// Additional client-side middleware check
@@ -74,7 +77,7 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
 				</svg>
-				<span class="ml-2 text-xl font-bold text-gray-900">Admin CMS</span>
+				<span class="ml-2 text-xl font-bold text-gray-900 truncate">{siteName}</span>
 			</div>
 			<button on:click={toggleSidebar} class="lg:hidden">
 				<X class="h-6 w-6 text-gray-400" />

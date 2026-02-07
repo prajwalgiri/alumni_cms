@@ -11,7 +11,7 @@
 
 	onMount(() => {
 		authStore.init();
-		settingsStore.init();
+		settingsStore.init('LandingPage');
 	});
 
 	// Use server-side data as fallback, client-side store as primary
@@ -19,6 +19,9 @@
 	$: user = $authStore.user || data.user;
 	$: isAdmin = user?.roleName === 'Admin' || user?.roleName === 'ADMINMNGR';
 	$: isAlumni = user?.roleName === 'Alumni';
+
+	$: siteName = $settingsStore.settings.find(s => s.key === 'SiteName')?.value || 'Alumni Network';
+	$: logoUrl = $settingsStore.settings.find(s => s.key === 'LogoUrl')?.value;
 	
 	let mobileMenuOpen = false;
 </script>
@@ -31,10 +34,14 @@
 				<!-- Logo -->
 				<div class="flex items-center">
 					<a href="/" class="flex items-center space-x-2">
-						<div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-							<Users class="w-5 h-5 text-white" />
-						</div>
-						<span class="text-xl font-bold text-gray-900">Alumni Network</span>
+						{#if logoUrl}
+							<img src={logoUrl} alt={siteName} class="h-8 w-auto" />
+						{:else}
+							<div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+								<Users class="w-5 h-5 text-white" />
+							</div>
+						{/if}
+						<span class="text-xl font-bold text-gray-900">{siteName}</span>
 					</a>
 				</div>
 
@@ -191,10 +198,14 @@
 			<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 				<div class="col-span-1 md:col-span-2">
 					<div class="flex items-center space-x-2 mb-4">
-						<div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-							<Users class="w-5 h-5 text-white" />
-						</div>
-						<span class="text-xl font-bold">Alumni Network</span>
+						{#if logoUrl}
+							<img src={logoUrl} alt={siteName} class="h-8 w-auto brightness-0 invert" />
+						{:else}
+							<div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+								<Users class="w-5 h-5 text-white" />
+							</div>
+						{/if}
+						<span class="text-xl font-bold">{siteName}</span>
 					</div>
 					<p class="text-gray-300 mb-4 max-w-md">
 						Connect with fellow alumni, discover opportunities, and stay updated with your alma mater's latest achievements and events.
@@ -236,7 +247,7 @@
 			</div>
 			
 			<div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-				<p>&copy; 2024 Alumni Network. All rights reserved.</p>
+				<p>&copy; 2024 {siteName}. All rights reserved.</p>
 			</div>
 		</div>
 	</footer>

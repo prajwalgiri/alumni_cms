@@ -140,6 +140,7 @@ export interface UserNavigation {
 export interface SystemSetting {
 	key: string;
 	value: string;
+	type: string;
 	description?: string;
 }
 
@@ -321,8 +322,9 @@ class ApiService {
 	}
 
 	// Settings endpoints
-	async getSettings(): Promise<ApiResponse<SystemSetting[]>> {
-		return this.request<SystemSetting[]>("/api/settings");
+	async getSettings(type?: string): Promise<ApiResponse<SystemSetting[]>> {
+		const endpoint = type ? `/api/settings?type=${type}` : "/api/settings";
+		return this.request<SystemSetting[]>(endpoint);
 	}
 
 	async updateSetting(

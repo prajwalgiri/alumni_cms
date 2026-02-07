@@ -14,25 +14,56 @@
         selectedTheme = themeSetting.value;
     }
 
+    onMount(() => {
+        settingsStore.init(); // Load all settings for admin
+    });
+
     const themes = [
         { id: 'blue', name: 'Blue', class: 'bg-blue-600' },
         { id: 'indigo', name: 'Indigo', class: 'bg-indigo-600' },
         { id: 'red', name: 'Red', class: 'bg-red-600' },
-        { id: 'emerald', name: 'Emerald', class: 'bg-emerald-600' }
+        { id: 'emerald', name: 'Emerald', class: 'bg-emerald-600' },
+        { id: 'maroon', name: 'Maroon', class: 'bg-[#af2a2c]' }
     ];
+
+    $: logoSetting = $settingsStore.settings.find(s => s.key === 'LogoUrl');
+    $: faviconSetting = $settingsStore.settings.find(s => s.key === 'FaviconUrl');
+    $: siteNameSetting = $settingsStore.settings.find(s => s.key === 'SiteName');
+
+    let logoUrl = '';
+    let faviconUrl = '';
+    let siteName = '';
+
+    $: if (logoSetting) logoUrl = logoSetting.value;
+    $: if (faviconSetting) faviconUrl = faviconSetting.value;
+    $: if (siteNameSetting) siteName = siteNameSetting.value;
 
     async function handleSave() {
         isSaving = true;
         message = '';
-        const result = await settingsStore.updateSetting('Theme', selectedTheme);
-        isSaving = false;
 
-        if (result.success) {
-            message = 'Theme updated successfully!';
-            isError = false;
-        } else {
-            message = result.message || 'Failed to update theme';
+        try {
+            const results = await Promise.all([
+                settingsStore.updateSetting('Theme', selectedTheme),
+                settingsStore.updateSetting('LogoUrl', logoUrl),
+                settingsStore.updateSetting('FaviconUrl', faviconUrl),
+                settingsStore.updateSetting('SiteName', siteName)
+            ]);
+
+            const allSuccess = results.every(r => r.success);
+
+            if (allSuccess) {
+                message = 'Settings updated successfully!';
+                isError = false;
+            } else {
+                message = 'Some settings failed to update';
+                isError = true;
+            }
+        } catch (err) {
+            message = 'An error occurred while saving';
             isError = true;
+        } finally {
+            isSaving = false;
         }
     }
 </script>
@@ -47,14 +78,55 @@
         <p class="text-gray-600 mt-1">Configure global application settings and appearance</p>
     </div>
 
-    <div class="max-w-4xl">
+    <div class="max-w-4xl space-y-6">
         <div class="card">
             <div class="flex items-center space-x-2 mb-6">
                 <Palette class="w-6 h-6 text-primary-600" />
-                <h3 class="text-lg font-semibold text-gray-900">Appearance Settings</h3>
+                <h3 class="text-lg font-semibold text-gray-900">Branding & Appearance</h3>
             </div>
 
             <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="form-label" for="siteName">Site Name</label>
+                        <input
+                            type="text"
+                            id="siteName"
+                            bind:value={siteName}
+                            class="input-field"
+                            placeholder="Enter site name"
+                        />
+                    </div>
+                    <div>
+                        <label class="form-label" for="logoUrl">Logo URL</label>
+                        <div class="flex space-x-2">
+                            <input
+                                type="text"
+                                id="logoUrl"
+                                bind:value={logoUrl}
+                                class="input-field flex-1"
+                                placeholder="/assets/logo.png"
+                            />
+                            {#if logoUrl}
+                                <div class="w-10 h-10 border rounded flex items-center justify-center bg-gray-50">
+                                    <img src={logoUrl} alt="Logo preview" class="max-w-full max-h-full object-contain" />
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label" for="faviconUrl">Favicon URL</label>
+                        <input
+                            type="text"
+                            id="faviconUrl"
+                            bind:value={faviconUrl}
+                            class="input-field"
+                            placeholder="/favicon.ico"
+                        />
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-gray-100">
                 <div>
                     <label class="form-label font-bold">Primary Color Theme</label>
                     <p class="text-sm text-gray-600 mb-4">Choose the primary color scheme for the entire application.</p>
@@ -88,7 +160,7 @@
                     </div>
                     <button
                         onclick={handleSave}
-                        disabled={isSaving || selectedTheme === themeSetting?.value}
+                        disabled={isSaving || (selectedTheme === themeSetting?.value && logoUrl === logoSetting?.value && faviconUrl === faviconSetting?.value && siteName === siteNameSetting?.value)}
                         class="btn-primary flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {#if isSaving}

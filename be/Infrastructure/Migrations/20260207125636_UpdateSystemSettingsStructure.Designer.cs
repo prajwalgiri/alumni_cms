@@ -3,6 +3,7 @@ using System;
 using Alumni.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alumni.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260207125636_UpdateSystemSettingsStructure")]
+    partial class UpdateSystemSettingsStructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -410,7 +413,7 @@ namespace Alumni.Infrastructure.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 2, 7, 12, 58, 44, 816, DateTimeKind.Utc).AddTicks(1768))
+                        .HasDefaultValue(new DateTime(2026, 2, 7, 12, 56, 33, 595, DateTimeKind.Utc).AddTicks(9975))
                         .HasColumnName("registration_date");
 
                     b.Property<int>("Status")
@@ -2685,7 +2688,7 @@ namespace Alumni.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Active color theme for the application",
                             Key = "Theme",
-                            Type = "LandingPage",
+                            Type = "UI",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = "maroon"
                         },
@@ -2695,7 +2698,7 @@ namespace Alumni.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Global application logo",
                             Key = "LogoUrl",
-                            Type = "LandingPage",
+                            Type = "Branding",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = "/assets/logo.png"
                         },
@@ -2705,7 +2708,7 @@ namespace Alumni.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Application favicon",
                             Key = "FaviconUrl",
-                            Type = "LandingPage",
+                            Type = "Branding",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = "/favicon.ico"
                         },
@@ -2715,7 +2718,7 @@ namespace Alumni.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "The name of the application",
                             Key = "SiteName",
-                            Type = "LandingPage",
+                            Type = "General",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Value = "Alumni Network"
                         });

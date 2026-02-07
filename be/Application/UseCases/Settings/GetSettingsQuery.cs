@@ -6,6 +6,7 @@ namespace Alumni.Application.UseCases.Settings;
 
 public class GetSettingsQuery : IRequest<List<SystemSettingDTO>>
 {
+    public string? Type { get; set; }
 }
 
 public class GetSettingsHandler : IRequestHandler<GetSettingsQuery, List<SystemSettingDTO>>
@@ -19,12 +20,13 @@ public class GetSettingsHandler : IRequestHandler<GetSettingsQuery, List<SystemS
 
     public async Task<List<SystemSettingDTO>> Handle(GetSettingsQuery request, CancellationToken cancellationToken)
     {
-        var settings = await _repository.GetAllAsync();
+        var settings = await _repository.GetAllAsync(request.Type);
         return settings
             .Select(s => new SystemSettingDTO
             {
                 Key = s.Key,
                 Value = s.Value,
+                Type = s.Type,
                 Description = s.Description
             })
             .ToList();

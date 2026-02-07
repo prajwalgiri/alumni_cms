@@ -53,6 +53,18 @@ const themes: Record<string, ThemePalette> = {
         '--primary-700': '#047857',
         '--primary-800': '#065f46',
         '--primary-900': '#064e3b',
+    },
+    maroon: {
+        '--primary-50': '#fdf2f2',
+        '--primary-100': '#fde1e1',
+        '--primary-200': '#f9c7c7',
+        '--primary-300': '#f3a0a0',
+        '--primary-400': '#e96d6d',
+        '--primary-500': '#d94444',
+        '--primary-600': '#af2a2c',
+        '--primary-700': '#942123',
+        '--primary-800': '#7b1e20',
+        '--primary-900': '#671d1e',
     }
 };
 
@@ -69,10 +81,10 @@ function createSettingsStore() {
 
     return {
         subscribe,
-        init: async () => {
+        init: async (type?: string) => {
             update(s => ({ ...s, isLoading: true }));
             try {
-                const result = await apiService.getSettings();
+                const result = await apiService.getSettings(type);
 
                 if (result.success && result.data) {
                     const settings = result.data;

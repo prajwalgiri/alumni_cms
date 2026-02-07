@@ -16,8 +16,15 @@ public class SystemSettingRepository : BaseRepository<SystemSetting>, ISystemSet
         return await _dbSet.FirstOrDefaultAsync(s => s.Key == key);
     }
 
-    async Task<List<SystemSetting>> ISystemSettingRepository.GetAllAsync()
+    public async Task<List<SystemSetting>> GetAllAsync(string? type = null)
     {
-        return await _dbSet.ToListAsync();
+        var query = _dbSet.AsQueryable();
+
+        if (!string.IsNullOrEmpty(type))
+        {
+            query = query.Where(s => s.Type == type);
+        }
+
+        return await query.ToListAsync();
     }
 }

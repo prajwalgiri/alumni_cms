@@ -361,13 +361,34 @@ public static class SeedData
         modelBuilder.Entity<User>().HasData(sampleUsers);
 
         // Seed System Settings
-        var themeSetting = new SystemSetting("Theme", "blue", "Active color theme for the application")
+        var settings = new List<SystemSetting>
         {
-            Id = Guid.Parse("A0000000-0000-0000-0000-000000000001"),
-            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            new SystemSetting("Theme", "maroon", "LandingPage", "Active color theme for the application")
+            {
+                Id = Guid.Parse("A0000000-0000-0000-0000-000000000001"),
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new SystemSetting("LogoUrl", "/assets/logo.png", "LandingPage", "Global application logo")
+            {
+                Id = Guid.Parse("A0000000-0000-0000-0000-000000000002"),
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new SystemSetting("FaviconUrl", "/favicon.ico", "LandingPage", "Application favicon")
+            {
+                Id = Guid.Parse("A0000000-0000-0000-0000-000000000003"),
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new SystemSetting("SiteName", "Alumni Network", "LandingPage", "The name of the application")
+            {
+                Id = Guid.Parse("A0000000-0000-0000-0000-000000000004"),
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            }
         };
 
-        modelBuilder.Entity<SystemSetting>().HasData(themeSetting);
+        modelBuilder.Entity<SystemSetting>().HasData(settings);
     }
 }
