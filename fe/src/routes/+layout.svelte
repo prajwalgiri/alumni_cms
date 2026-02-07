@@ -290,7 +290,11 @@
 						and events.
 					</p>
 					<div class="flex space-x-4">
-						<a href="#" class="text-gray-400 hover:text-white">
+						<a
+							href="/"
+							aria-disabled="true"
+							class="text-gray-400 hover:text-white"
+						>
 							<span class="sr-only">LinkedIn</span>
 							<svg
 								class="w-6 h-6"
@@ -302,7 +306,11 @@
 								/>
 							</svg>
 						</a>
-						<a href="#" class="text-gray-400 hover:text-white">
+						<a
+							href="/"
+							aria-disabled="true"
+							class="text-gray-400 hover:text-white"
+						>
 							<span class="sr-only">Twitter</span>
 							<svg
 								class="w-6 h-6"

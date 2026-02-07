@@ -197,7 +197,8 @@
 
 				<div class="text-sm">
 					<a
-						href="#"
+						href="/"
+						aria-disabled="true"
 						class="font-medium text-primary-600 hover:text-primary-500"
 					>
 						Forgot your password?
