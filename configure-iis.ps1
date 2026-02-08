@@ -32,7 +32,7 @@ $FeAppPool = "AlumniCMS_AppPool"
 $FeDeployDir = "C:\deploy\alumni\alumni-fe"
 $FePort = 3000
 $HostName = ""                 # empty = IP access
-$FeNodeEntry = "build\index.js"   # <-- MUST EXIST in $FeDeployDir (adapter-node output)
+$FeNodeEntry = "build/index.js"   # <-- MUST EXIST in $FeDeployDir (adapter-node output)
 
 # Runtime env passed to Node (SvelteKit reads from process.env)
 $NodeEnv = "production"
@@ -170,6 +170,11 @@ function Write-FeWebConfig_IisNode([string]$path, [string]$nodeEntryRel, [bool]$
     $content = @"
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
+    <appSettings>
+      <add key="NODE_ENV" value="$nodeEnv" />
+      <add key="PUBLIC_API_URL" value="$publicApiUrl" />
+      <add key="PORT" value="$FePort" />
+    </appSettings>
   <system.webServer>
 
     <!-- iisnode handler -->
@@ -195,14 +200,12 @@ $proxyRule
     <iisnode
       node_env="$nodeEnv"
       loggingEnabled="true"
-      devErrorsEnabled="true"
+      devErrorsEnabled="false"
+      debuggingEnabled="false"
+      logDirectory="iisnode"
       flushResponse="true" />
 
-    <environmentVariables>
-      <environmentVariable name="NODE_ENV" value="$nodeEnv" />
-      <environmentVariable name="PUBLIC_API_URL" value="$publicApiUrl" />
-      <environmentVariable name="PORT" value="$FePort" />
-    </environmentVariables>
+
 
     <security>
       <requestFiltering>
@@ -289,3 +292,6 @@ iisreset | Out-Null
 Info "DONE."
 Info ("FE: http://<your-ip>:{0}/ (IISNODE entry: {1})" -f $FePort, $FeNodeEntry)
 Info ("BE: http://<your-ip>:{0}/" -f $BePort)
+
+Read-Host "Press Enter to exit..."
+exit 0

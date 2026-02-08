@@ -1,9 +1,13 @@
 # ===========================
-# check-hosting.ps1 (Win10) - FE + BE IIS health check (STATIC or IISNODE)
+# check-hosting.ps1 (Verbose, ASCII-safe)
+# FE (IISNODE) + BE (IIS)
 # Exit codes: 0 OK, 1 WARN, 2 FAIL
 # ===========================
 
-param([string]$JsonOut = "")
+param(
+    [switch]$VerboseOutput,
+    [string]$JsonOut = ""
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Continue"
@@ -16,224 +20,300 @@ $FeSiteName = "AlumniCMS"
 $FeDeployDir = "C:\deploy\alumni\alumni-fe"
 $FePort = 3000
 
-# FE mode: "STATIC" or "IISNODE"
-$FeMode = "STATIC"
-$FeNodeEntry = "server.js"   # only used if IISNODE
+# Node entry (iisnode)
+# If you use the publish script I gave, it also writes .iisnode-entry.txt
+$FeNodeEntryDefault = "build\index.js"
 
 # BE
 $BeSiteName = "AlumniCMS_API"
 $BeDeployDir = "C:\deploy\alumni\alumni-be"
 $BePort = 3002
 
-# Optional proxy test (from FE)
-$ApiHealthPath = "/api/health"   # "" to skip
-
-# Requirements
-$RequireIisSitesExist = $true
-$RequireFeHttp200 = $true
-$RequireBeSiteExists = $true
+# Optional proxy health check via FE (if you proxy /api -> BE)
+$ApiHealthPath = "/health"
 # ------------------------
 
-$RESULT = [ordered]@{
+# Result
+$R = [ordered]@{
     timestamp = (Get-Date).ToString("o")
-    host      = $HostToTest
-    fe        = [ordered]@{ site = $FeSiteName; port = $FePort; path = $FeDeployDir; mode = $FeMode; nodeEntry = $FeNodeEntry }
-    be        = [ordered]@{ site = $BeSiteName; port = $BePort; path = $BeDeployDir }
     checks    = @()
     summary   = [ordered]@{ ok = 0; warn = 0; fail = 0 }
     exitCode  = 0
 }
 
-function Add-Check([string]$name, [string]$status, [string]$message, [hashtable]$data = $null) {
-    $RESULT.checks += [ordered]@{ name = $name; status = $status; message = $message; data = $data }
-    switch ($status) {
-        "OK" { $RESULT.summary.ok++ }
-        "WARN" { $RESULT.summary.warn++ }
-        "FAIL" { $RESULT.summary.fail++ }
-    }
+function Title([string]$t) {
+    Write-Host ""
+    Write-Host ("=== {0} ===" -f $t) -ForegroundColor Cyan
 }
 
-function Title($t) { Write-Host "`n=== $t ===" -ForegroundColor Cyan }
-function Ok($m) { Write-Host "[OK]   $m" -ForegroundColor Green }
-function Warn($m) { Write-Host "[WARN] $m" -ForegroundColor Yellow }
-function Err($m) { Write-Host "[ERR]  $m" -ForegroundColor Red }
-
-function Test-PathSafe([string]$p) { try { return (Test-Path -LiteralPath $p) } catch { return $false } }
-function Read-TextFile([string]$p) { try { return (Get-Content -LiteralPath $p -Raw -ErrorAction Stop) } catch { return $null } }
-
-function Get-HttpStatus([string]$url) {
-    try {
-        $r = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 10
-        return @{ ok = $true; status = [int]$r.StatusCode; len = ($r.Content.Length); content = $r.Content }
-    }
-    catch {
-        $status = $null
-        try { $status = $_.Exception.Response.StatusCode.value__ } catch {}
-        return @{ ok = $false; status = $status; err = $_.Exception.Message; content = $null }
-    }
+function TP([string]$p) {
+    try { return (Test-Path -LiteralPath $p) } catch { return $false }
 }
 
-function Ensure-WebAdminLoaded {
-    if (-not (Get-Module -ListAvailable -Name WebAdministration)) {
-        Add-Check "iis.webadministration" "FAIL" "WebAdministration module not found."
-        return $false
-    }
-    try {
-        Import-Module WebAdministration -ErrorAction Stop | Out-Null
-        Add-Check "iis.webadministration" "OK" "WebAdministration loaded."
-        return $true
-    }
-    catch {
-        Add-Check "iis.webadministration" "FAIL" ("Failed to import WebAdministration: " + $_.Exception.Message)
-        return $false
-    }
-}
-
-function Get-IisSite([string]$name) {
-    try { if (Test-Path "IIS:\Sites\$name") { return (Get-Item "IIS:\Sites\$name") } } catch {}
-    return $null
-}
-
-function Check-Site([string]$siteName, [string]$kind) {
-    $site = Get-IisSite $siteName
-    if (-not $site) { Add-Check "$kind.iis.site" "FAIL" "IIS site not found." @{ site = $siteName }; return }
-    Add-Check "$kind.iis.site" "OK" ("IIS site found (state={0})." -f $site.State) @{ site = $siteName; path = $site.physicalPath }
-    $bindings = @($site.Bindings.Collection | ForEach-Object { "$($_.protocol) $($_.bindingInformation)" })
-    Add-Check "$kind.iis.bindings" "OK" ("Bindings={0}" -f $bindings.Count) @{ bindings = $bindings }
-}
-
-function Test-UrlRewriteArr {
-    $cfg = "$env:windir\System32\inetsrv\config\applicationHost.config"
-    if (-not (Test-PathSafe $cfg)) { Add-Check "iis.modules" "WARN" "applicationHost.config missing."; return }
-
-    $c = Read-TextFile $cfg
-    if (-not $c) { Add-Check "iis.modules" "WARN" "Could not read applicationHost.config."; return }
-
-    $rewrite = ($c -match "rewrite")
-    $arr = ($c -match "applicationRequestRouting" -or $c -match "<section name=`"proxy`"")
-
-    if ($rewrite) { Add-Check "iis.urlRewrite" "OK" "URL Rewrite appears installed." @{} }
-    else { Add-Check "iis.urlRewrite" "WARN" "URL Rewrite NOT detected." @{} }
-
-    if ($arr) { Add-Check "iis.arr" "OK" "ARR/Proxy appears installed." @{} }
-    else { Add-Check "iis.arr" "WARN" "ARR/Proxy NOT detected." @{} }
-}
-
-function Test-ANCM {
-    $ancm = "$env:windir\System32\inetsrv\aspnetcorev2.dll"
-    if (Test-PathSafe $ancm) { Add-Check "be.ancm" "OK" "ASP.NET Core Module present." @{ path = $ancm } }
-    else { Add-Check "be.ancm" "WARN" "ASP.NET Core Module missing (install Hosting Bundle)." @{ expected = $ancm } }
-}
-
-function Test-NodeIisNode {
-    # node
-    try { $null = Get-Command node -ErrorAction Stop; Add-Check "fe.node" "OK" "Node is in PATH." @{} }
-    catch { Add-Check "fe.node" "WARN" "Node not found in PATH." @{} }
-
-    # iisnode dll
-    $dlls = @(
-        "$env:windir\System32\inetsrv\iisnode.dll",
-        "${env:ProgramFiles}\iisnode\iisnode.dll",
-        "${env:ProgramFiles(x86)}\iisnode\iisnode.dll"
+function Add-Check {
+    param(
+        [Parameter(Mandatory = $true)][string]$Name,
+        [Parameter(Mandatory = $true)][ValidateSet("OK", "WARN", "FAIL")][string]$Status,
+        [Parameter(Mandatory = $true)][string]$Message,
+        [hashtable]$Data = $null
     )
-    $found = $false
-    foreach ($d in $dlls) { if (Test-PathSafe $d) { $found = $true; break } }
-    if ($found) { Add-Check "fe.iisnode" "OK" "iisnode appears installed." @{} }
-    else { Add-Check "fe.iisnode" "WARN" "iisnode NOT detected." @{} }
 
-    $entryAbs = Join-Path $FeDeployDir $FeNodeEntry
-    if (Test-PathSafe $entryAbs) { Add-Check "fe.nodeEntry" "OK" "Node entry exists." @{ path = $entryAbs } }
-    else { Add-Check "fe.nodeEntry" "FAIL" "Node entry missing." @{ expected = $entryAbs } }
-}
+    $R.checks += [ordered]@{
+        name    = $Name
+        status  = $Status
+        message = $Message
+        data    = $Data
+    }
 
-function Check-FeStaticFiles {
-    $idx = Join-Path $FeDeployDir "index.html"
-    if (Test-PathSafe $idx) { Add-Check "fe.index" "OK" "index.html present." @{ path = $idx } }
-    else { Add-Check "fe.index" "FAIL" "index.html missing." @{ expected = $idx } }
-}
+    switch ($Status) {
+        "OK" { $R.summary.ok++ }
+        "WARN" { $R.summary.warn++ }
+        "FAIL" { $R.summary.fail++ }
+    }
 
-function Check-BeFiles {
-    $webConfig = Join-Path $BeDeployDir "web.config"
-    if (Test-PathSafe $webConfig) { Add-Check "be.webconfig" "OK" "BE web.config present." @{ path = $webConfig } }
-    else { Add-Check "be.webconfig" "FAIL" "BE web.config missing (IIS hosting will fail)." @{ expected = $webConfig } }
-}
+    # Print every check if VerboseOutput is enabled
+    if ($VerboseOutput) {
+        $color = "Gray"
+        if ($Status -eq "OK") { $color = "Green" }
+        elseif ($Status -eq "WARN") { $color = "Yellow" }
+        elseif ($Status -eq "FAIL") { $color = "Red" }
 
-function Check-Http([string]$name, [string]$url, [bool]$requireOk) {
-    $r = Get-HttpStatus $url
-    if ($r.ok) { Add-Check $name "OK" ("GET {0} -> {1} (len={2})" -f $url, $r.status, $r.len) @{ url = $url; status = $r.status } }
-    else {
-        $msg = ("GET {0} failed (status={1}) {2}" -f $url, $r.status, $r.err)
-        if ($requireOk) { Add-Check $name "FAIL" $msg @{ url = $url; status = $r.status } }
-        else { Add-Check $name "WARN" $msg @{ url = $url; status = $r.status } }
+        Write-Host ("[{0}] {1} - {2}" -f $Status, $Name, $Message) -ForegroundColor $color
+
+        if ($Data) {
+            foreach ($kv in $Data.GetEnumerator()) {
+                Write-Host ("       {0}: {1}" -f $kv.Key, $kv.Value) -ForegroundColor DarkGray
+            }
+        }
     }
 }
 
+function GetHttp([string]$url) {
+    try {
+        $resp = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 10
+        return @{ ok = $true; code = [int]$resp.StatusCode; body = $resp.Content }
+    }
+    catch {
+        $code = $null
+        try { $code = $_.Exception.Response.StatusCode.value__ } catch {}
+        return @{ ok = $false; code = $code; err = $_.Exception.Message; body = $null }
+    }
+}
+
+function Detect-FeNodeEntry {
+    $marker = Join-Path $FeDeployDir ".iisnode-entry.txt"
+    if (TP $marker) {
+        try {
+            $rel = (Get-Content -LiteralPath $marker -ErrorAction Stop | Select-Object -First 1).Trim()
+            if ($rel) { return $rel }
+        }
+        catch {}
+    }
+    return $FeNodeEntryDefault
+}
+
 # ===========================
-# RUN
+# RUN CHECKS
 # ===========================
+
 Title "Files"
-if (Test-PathSafe $FeDeployDir) { Add-Check "fe.dir" "OK" "FE dir exists." @{ path = $FeDeployDir } } else { Add-Check "fe.dir" "FAIL" "FE dir missing." @{ expected = $FeDeployDir } }
-if (Test-PathSafe $BeDeployDir) { Add-Check "be.dir" "OK" "BE dir exists." @{ path = $BeDeployDir } } else { Add-Check "be.dir" "FAIL" "BE dir missing." @{ expected = $BeDeployDir } }
 
-$feWebConfig = Join-Path $FeDeployDir "web.config"
-if (Test-PathSafe $feWebConfig) { Add-Check "fe.webconfig" "OK" "FE web.config present." @{ path = $feWebConfig } } else { Add-Check "fe.webconfig" "WARN" "FE web.config missing." @{ expected = $feWebConfig } }
+# FE folder
+if (TP $FeDeployDir) {
+    Add-Check "fe.dir" "OK" "FE deploy directory exists." @{ path = $FeDeployDir }
+}
+else {
+    Add-Check "fe.dir" "FAIL" "FE deploy directory missing." @{ expected = $FeDeployDir }
+}
 
-if ($FeMode -eq "STATIC") { Check-FeStaticFiles }
-elseif ($FeMode -eq "IISNODE") { Test-NodeIisNode }
-else { Add-Check "fe.mode" "FAIL" "Invalid FeMode (use STATIC or IISNODE)." @{ value = $FeMode } }
+# FE node entry
+$FeNodeEntry = Detect-FeNodeEntry
+$feEntryAbs = Join-Path $FeDeployDir $FeNodeEntry
+if (TP $feEntryAbs) {
+    Add-Check "fe.entry" "OK" "FE IISNODE entry exists." @{ entry = $FeNodeEntry; fullPath = $feEntryAbs }
+}
+else {
+    Add-Check "fe.entry" "FAIL" "FE IISNODE entry missing." @{ expected = $feEntryAbs }
+}
 
-Check-BeFiles
+# FE web.config
+$feWeb = Join-Path $FeDeployDir "web.config"
+if (TP $feWeb) {
+    Add-Check "fe.webconfig" "OK" "FE web.config present." @{ path = $feWeb }
+}
+else {
+    Add-Check "fe.webconfig" "WARN" "FE web.config missing." @{ expected = $feWeb }
+}
+
+# BE folder
+if (TP $BeDeployDir) {
+    Add-Check "be.dir" "OK" "BE deploy directory exists." @{ path = $BeDeployDir }
+}
+else {
+    Add-Check "be.dir" "FAIL" "BE deploy directory missing." @{ expected = $BeDeployDir }
+}
+
+# BE web.config
+$beWeb = Join-Path $BeDeployDir "web.config"
+if (TP $beWeb) {
+    Add-Check "be.webconfig" "OK" "BE web.config present." @{ path = $beWeb }
+}
+else {
+    Add-Check "be.webconfig" "FAIL" "BE web.config missing (IIS hosting will fail)." @{ expected = $beWeb }
+}
 
 Title "IIS"
-$webAdminOk = Ensure-WebAdminLoaded
-if ($webAdminOk) {
-    Check-Site $FeSiteName "fe"
-    Check-Site $BeSiteName "be"
+
+if (Get-Module -ListAvailable WebAdministration) {
+    try {
+        Import-Module WebAdministration -ErrorAction Stop | Out-Null
+        Add-Check "iis.webadmin" "OK" "WebAdministration module loaded."
+    }
+    catch {
+        Add-Check "iis.webadmin" "FAIL" ("Failed to import WebAdministration: {0}" -f $_.Exception.Message)
+    }
+
+    foreach ($siteName in @($FeSiteName, $BeSiteName)) {
+        $iisPath = "IIS:\Sites\$siteName"
+        if (TP $iisPath) {
+            try {
+                $site = Get-Item $iisPath
+                $bindings = @($site.Bindings.Collection | ForEach-Object { "$($_.protocol) $($_.bindingInformation)" })
+                Add-Check ("iis.site." + $siteName) "OK" "IIS site exists." @{
+                    state        = $site.State
+                    physicalPath = $site.physicalPath
+                    bindings     = ($bindings -join "; ")
+                }
+            }
+            catch {
+                Add-Check ("iis.site." + $siteName) "WARN" ("Could not read site details: {0}" -f $_.Exception.Message)
+            }
+        }
+        else {
+            Add-Check ("iis.site." + $siteName) "FAIL" "IIS site not found." @{ site = $siteName }
+        }
+    }
+}
+else {
+    Add-Check "iis.webadmin" "FAIL" "WebAdministration module not available (IIS tools missing?)."
 }
 
 Title "Modules"
-Test-UrlRewriteArr
-Test-ANCM
-if ($FeMode -eq "IISNODE") { Test-NodeIisNode }
+
+$cfg = Join-Path $env:windir "System32\inetsrv\config\applicationHost.config"
+if (TP $cfg) {
+    $c = $null
+    try { $c = Get-Content -LiteralPath $cfg -Raw -ErrorAction Stop } catch {}
+    if ($c) {
+        if ($c -match "rewrite") {
+            Add-Check "iis.urlrewrite" "OK" "URL Rewrite appears installed."
+        }
+        else {
+            Add-Check "iis.urlrewrite" "WARN" "URL Rewrite not detected."
+        }
+
+        if ($c -match "applicationRequestRouting" -or $c -match "<section name=`"proxy`"") {
+            Add-Check "iis.arr" "OK" "ARR/Proxy appears installed."
+        }
+        else {
+            Add-Check "iis.arr" "WARN" "ARR/Proxy not detected."
+        }
+    }
+    else {
+        Add-Check "iis.config.read" "WARN" "Could not read applicationHost.config." @{ path = $cfg }
+    }
+}
+else {
+    Add-Check "iis.config" "WARN" "applicationHost.config not found." @{ path = $cfg }
+}
+
+# ASP.NET Core module (for BE in IIS)
+$ancm = Join-Path $env:windir "System32\inetsrv\aspnetcorev2.dll"
+if (TP $ancm) {
+    Add-Check "be.ancm" "OK" "ASP.NET Core Module present." @{ path = $ancm }
+}
+else {
+    Add-Check "be.ancm" "WARN" "ASP.NET Core Module missing (install Hosting Bundle)." @{ expected = $ancm }
+}
+
+# Node + iisnode
+try {
+    Get-Command node -ErrorAction Stop | Out-Null
+    Add-Check "fe.node" "OK" "Node found in PATH."
+}
+catch {
+    Add-Check "fe.node" "FAIL" "Node not found in PATH."
+}
+
+$nodeDlls = @(
+    (Join-Path $env:windir "System32\inetsrv\iisnode.dll"),
+    (Join-Path ${env:ProgramFiles} "iisnode\iisnode.dll"),
+    (Join-Path ${env:ProgramFiles(x86)} "iisnode\iisnode.dll")
+)
+$foundIisNode = $false
+foreach ($d in $nodeDlls) { if ($d -and (TP $d)) { $foundIisNode = $true; break } }
+
+if ($foundIisNode) {
+    Add-Check "fe.iisnode" "OK" "iisnode appears installed."
+}
+else {
+    Add-Check "fe.iisnode" "FAIL" "iisnode not detected (iisnode.dll not found)."
+}
 
 Title "HTTP"
-$feRoot = "http://$HostToTest`:$FePort/"
-$beRoot = "http://$HostToTest`:$BePort/"
-Check-Http "http.fe.root" $feRoot $RequireFeHttp200
-Check-Http "http.be.root" $beRoot $false
+
+$feUrl = "http://$HostToTest`:$FePort/"
+$r1 = GetHttp $feUrl
+if ($r1.ok) {
+    Add-Check "http.fe" "OK" "Frontend reachable." @{ url = $feUrl; status = $r1.code }
+}
+else {
+    Add-Check "http.fe" "FAIL" "Frontend NOT reachable." @{ url = $feUrl; status = $r1.code; error = $r1.err }
+}
+
+$beUrl = "http://$HostToTest`:$BePort/"
+$r2 = GetHttp $beUrl
+if ($r2.ok) {
+    Add-Check "http.be" "OK" "Backend reachable (direct)." @{ url = $beUrl; status = $r2.code }
+}
+else {
+    Add-Check "http.be" "WARN" "Backend not reachable directly (might still be reachable via IIS site/proxy)." @{ url = $beUrl; status = $r2.code; error = $r2.err }
+}
 
 if ($ApiHealthPath -and $ApiHealthPath.Trim() -ne "") {
-    $api = "http://$HostToTest`:$FePort$ApiHealthPath"
-    Check-Http "http.fe.api" $api $false
+    $apiUrl = "http://$HostToTest`:$FePort$ApiHealthPath"
+    $ra = GetHttp $apiUrl
+    if ($ra.ok) {
+        Add-Check "http.fe.api" "OK" "API reachable via FE (/api proxy)." @{ url = $apiUrl; status = $ra.code }
+
+        if ($ra.body -and $ra.body.TrimStart().StartsWith("<")) {
+            Add-Check "http.fe.api.html" "WARN" "API returned HTML (proxy missing or SPA/SSR fallback caught /api)." @{ url = $apiUrl }
+        }
+    }
+    else {
+        Add-Check "http.fe.api" "WARN" "API not reachable via FE (/api proxy)." @{ url = $apiUrl; status = $ra.code; error = $ra.err }
+    }
 }
 
 Title "Summary"
-Write-Host ("OK={0} WARN={1} FAIL={2}" -f $RESULT.summary.ok, $RESULT.summary.warn, $RESULT.summary.fail) -ForegroundColor Cyan
+Write-Host ("OK={0} WARN={1} FAIL={2}" -f $R.summary.ok, $R.summary.warn, $R.summary.fail) -ForegroundColor Cyan
 
-# exit code
-$requiredFailures = @()
-if ($RequireIisSitesExist) { $requiredFailures += @($RESULT.checks | Where-Object { $_.name -in @("fe.iis.site", "be.iis.site") -and $_.status -eq "FAIL" }) }
-if ($RequireFeHttp200) { $requiredFailures += @($RESULT.checks | Where-Object { $_.name -eq "http.fe.root" -and $_.status -eq "FAIL" }) }
-if ($RequireBeSiteExists) { $requiredFailures += @($RESULT.checks | Where-Object { $_.name -eq "be.iis.site" -and $_.status -eq "FAIL" }) }
-
-$requiredFailures = @($requiredFailures | Where-Object { $_ })
-
+# Exit code
 $exit = 0
-if ($requiredFailures.Count -gt 0 -or $RESULT.summary.fail -gt 0) { $exit = 2 }
-elseif ($RESULT.summary.warn -gt 0) { $exit = 1 }
-else { $exit = 0 }
+if ($R.summary.fail -gt 0) { $exit = 2 }
+elseif ($R.summary.warn -gt 0) { $exit = 1 }
+$R.exitCode = $exit
 
-$RESULT.exitCode = $exit
-
+# JSON output if requested
 if ($JsonOut -and $JsonOut.Trim() -ne "") {
     try {
-        $dir = Split-Path -Parent $JsonOut
-        if ($dir -and -not (Test-PathSafe $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
-        ($RESULT | ConvertTo-Json -Depth 10) | Set-Content -Path $JsonOut -Encoding UTF8
-        Ok ("Wrote JSON report: {0}" -f $JsonOut)
+        $parent = Split-Path -Parent $JsonOut
+        if ($parent) { Ensure-Dir $parent }
+        ($R | ConvertTo-Json -Depth 10) | Set-Content -Path $JsonOut -Encoding UTF8
+        if ($VerboseOutput) { Write-Host ("Wrote JSON report: {0}" -f $JsonOut) -ForegroundColor Green }
     }
     catch {
-        Warn ("Could not write JSON report: {0}" -f $_.Exception.Message)
+        Add-Check "json.write" "WARN" ("Could not write JSON report: {0}" -f $_.Exception.Message)
     }
 }
 
