@@ -46,7 +46,8 @@ namespace Alumni.Infrastructure.Migrations
                         .HasColumnName("degree");
 
                     b.Property<string>("Faculty")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("faculty");
 
                     b.Property<string>("GithubUrl")
                         .HasColumnType("TEXT")
@@ -424,9 +425,7 @@ namespace Alumni.Infrastructure.Migrations
                         .HasColumnName("event_id");
 
                     b.Property<DateTime>("RegistrationDate")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 2, 9, 13, 39, 54, 283, DateTimeKind.Utc).AddTicks(722))
                         .HasColumnName("registration_date");
 
                     b.Property<int>("Status")

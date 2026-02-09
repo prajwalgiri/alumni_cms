@@ -121,7 +121,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
             entity.Property(e => e.EventId).HasColumnName("event_id").IsRequired();
             entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
-            entity.Property(e => e.RegistrationDate).HasColumnName("registration_date").HasDefaultValue(DateTime.UtcNow);
+            entity.Property(e => e.RegistrationDate).HasColumnName("registration_date");
             entity.Property(e => e.Status).HasColumnName("status").HasDefaultValue(RegistrationStatus.Pending);
 
             entity.HasOne(e => e.Event)

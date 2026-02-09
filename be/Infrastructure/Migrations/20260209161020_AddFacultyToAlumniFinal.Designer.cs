@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alumni.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260209133956_AddFacultyToAlumni")]
-    partial class AddFacultyToAlumni
+    [Migration("20260209161020_AddFacultyToAlumniFinal")]
+    partial class AddFacultyToAlumniFinal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,7 +49,8 @@ namespace Alumni.Infrastructure.Migrations
                         .HasColumnName("degree");
 
                     b.Property<string>("Faculty")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("faculty");
 
                     b.Property<string>("GithubUrl")
                         .HasColumnType("TEXT")
@@ -427,9 +428,7 @@ namespace Alumni.Infrastructure.Migrations
                         .HasColumnName("event_id");
 
                     b.Property<DateTime>("RegistrationDate")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 2, 9, 13, 39, 54, 283, DateTimeKind.Utc).AddTicks(722))
                         .HasColumnName("registration_date");
 
                     b.Property<int>("Status")
