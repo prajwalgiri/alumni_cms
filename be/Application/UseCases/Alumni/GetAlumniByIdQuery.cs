@@ -45,12 +45,22 @@ public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, Api
                 Message = "Alumni profile is private"
             };
         }
-
+        var user = await _userRepository.GetByIdAsync(alumni.UserId);
+        if(user is null)
+        {
+            return new ApiResponse<AlumniResponse>
+            {
+                Success = false,
+                Message = "User not found for the alumni profile"
+            };
+        }
         var response = new AlumniResponse
         {
             Id = alumni.Id,
             UserId = alumni.UserId,
-            
+            Email = user?.Email ?? string.Empty,
+            FirstName = user?.FirstName ?? string.Empty,
+            LastName = user?.LastName ?? string.Empty,
             GraduationYear = alumni.GraduationYear,
             Degree = alumni.Degree,
             Major = alumni.Major,
@@ -67,24 +77,12 @@ public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, Api
             UpdatedAt = alumni.UpdatedAt
         };
 
-        var user = await _userRepository.GetByIdAsync(alumni.UserId);
 
-        if (user is not null)
-        {
-            response.User = new UserResponse
+        
+            return new ApiResponse<AlumniResponse>
             {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-              
+                Success = true,
+                Data = response
             };
-        }
-
-        return new ApiResponse<AlumniResponse>
-        {
-            Success = true,
-            Data = response
-        };
     }
 }

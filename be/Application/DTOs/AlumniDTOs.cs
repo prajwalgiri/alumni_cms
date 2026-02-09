@@ -35,6 +35,9 @@ public class AlumniResponse
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public UserResponse User { get; set; } = new();
+    public string Email { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
     public int GraduationYear { get; set; }
     public string Degree { get; set; } = string.Empty;
     public string Major { get; set; } = string.Empty;
