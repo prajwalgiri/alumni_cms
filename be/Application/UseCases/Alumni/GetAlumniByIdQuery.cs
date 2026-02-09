@@ -1,6 +1,7 @@
 using MediatR;
 using Alumni.Application.DTOs;
 using Alumni.Domain.Interfaces;
+using System.Data.SqlTypes;
 
 namespace Alumni.Application.UseCases.Alumni;
 
@@ -44,15 +45,7 @@ public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, Api
         {
             Id = alumni.Id,
             UserId = alumni.UserId,
-            User = new UserResponse
-            {
-                Id = alumni.User.Id,
-                Email = alumni.User.Email,
-                FirstName = alumni.User.FirstName,
-                LastName = alumni.User.LastName,
-                RoleId = alumni.User.RoleId,
-                RoleName = alumni.User.Role?.Name ?? string.Empty
-            },
+            
             GraduationYear = alumni.GraduationYear,
             Degree = alumni.Degree,
             Major = alumni.Major,
@@ -68,6 +61,17 @@ public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, Api
             CreatedAt = alumni.CreatedAt,
             UpdatedAt = alumni.UpdatedAt
         };
+        if(alumni.User is not null)
+        {
+            response.User = new UserResponse
+            {
+                Id = alumni.User.Id,
+                FirstName = alumni.User.FirstName,
+                LastName = alumni.User.LastName,
+                Email = alumni.User.Email,
+              
+            };
+        }
 
         return new ApiResponse<AlumniResponse>
         {
