@@ -21,6 +21,7 @@
 		error = '';
 		
 		try {
+			console.log('Attempting login for:', email);
 			const response = await apiService.login({ email, password });
 			
 			if (response.success && response.data) {
@@ -87,7 +88,7 @@
 			</div>
 		{/if}
 		
-		<form class="mt-8 space-y-6" on:submit|preventDefault={handleLogin}>
+		<form class="mt-8 space-y-6" onsubmit={(e) => { e.preventDefault(); handleLogin(); }}>
 			<div class="space-y-4">
 				<div>
 					<label for="email" class="form-label">Email address</label>
@@ -127,7 +128,7 @@
 						<button
 							type="button"
 							class="absolute inset-y-0 right-0 pr-3 flex items-center"
-							on:click={() => showPassword = !showPassword}
+							onclick={() => showPassword = !showPassword}
 						>
 							{#if showPassword}
 								<EyeOff class="h-5 w-5 text-gray-400" />

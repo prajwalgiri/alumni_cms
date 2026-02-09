@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<Alumni.Domain.Entities.Alumni> Alumni { get; set; }
     public DbSet<Event> Events { get; set; }
     public DbSet<EventRegistration> EventRegistrations { get; set; }
+    public DbSet<Content> Contents { get; set; }
     
     // Role-based access control
     public DbSet<Role> Roles { get; set; }
@@ -133,6 +134,27 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(e => new { e.EventId, e.UserId }).IsUnique();
+        });
+
+        // Content configuration
+        modelBuilder.Entity<Content>(entity =>
+        {
+            entity.ToTable("contents");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(e => e.Title).HasColumnName("title").IsRequired();
+            entity.Property(e => e.Body).HasColumnName("body").IsRequired();
+            entity.Property(e => e.Type).HasColumnName("type").IsRequired();
+            entity.Property(e => e.Status).HasColumnName("status").IsRequired().HasDefaultValue(ContentStatus.Draft);
+            entity.Property(e => e.PublishDate).HasColumnName("publish_date");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by").IsRequired();
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").IsRequired();
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at").IsRequired();
+
+            entity.HasOne(e => e.Creator)
+                .WithMany()
+                .HasForeignKey(e => e.CreatedBy)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         // Role configuration

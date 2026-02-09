@@ -3,6 +3,7 @@ using System;
 using Alumni.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alumni.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260207125303_AddContentEntity")]
+    partial class AddContentEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -373,44 +376,6 @@ namespace Alumni.Infrastructure.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.ToTable("contents", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c0000000-0000-0000-0000-000000000001"),
-                            Body = "We are excited to launch our new portal to help our alumni stay connected. Explore the features and update your profile!",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = new Guid("a1111111-1111-1111-1111-111111111111"),
-                            PublishDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Status = 1,
-                            Title = "Welcome to the new Alumni Portal!",
-                            Type = 0,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("c0000000-0000-0000-0000-000000000002"),
-                            Body = "Don't forget to register for the upcoming annual meetup in December. We have some great speakers lined up!",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = new Guid("a1111111-1111-1111-1111-111111111111"),
-                            PublishDate = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Status = 1,
-                            Title = "Upcoming Annual Meetup",
-                            Type = 1,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = new Guid("c0000000-0000-0000-0000-000000000003"),
-                            Body = "Join our career services workshop next week to learn about the latest industry trends and how to improve your resume.",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = new Guid("a1111111-1111-1111-1111-111111111111"),
-                            PublishDate = new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Status = 1,
-                            Title = "Career Services Workshop",
-                            Type = 0,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        });
                 });
 
             modelBuilder.Entity("Alumni.Domain.Entities.Event", b =>
@@ -498,7 +463,7 @@ namespace Alumni.Infrastructure.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 2, 7, 12, 53, 49, 574, DateTimeKind.Utc).AddTicks(1118))
+                        .HasDefaultValue(new DateTime(2026, 2, 7, 12, 53, 2, 185, DateTimeKind.Utc).AddTicks(642))
                         .HasColumnName("registration_date");
 
                     b.Property<int>("Status")

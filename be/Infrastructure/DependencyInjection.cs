@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<INavigationRepository, NavigationRepository>();
+        services.AddScoped<IContentRepository, ContentRepository>();
 
         // Add Services
         services.AddScoped<IJwtService, JwtService>();

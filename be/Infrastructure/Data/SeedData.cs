@@ -341,5 +341,42 @@ public static class SeedData
         };
 
         modelBuilder.Entity<User>().HasData(sampleUsers);
+
+        // Seed Content
+        var contents = new List<Content>
+        {
+            new Content(
+                "Welcome to the new Alumni Portal!",
+                "We are excited to launch our new portal to help our alumni stay connected. Explore the features and update your profile!",
+                ContentType.News,
+                Guid.Parse("a1111111-1111-1111-1111-111111111111"),
+                ContentStatus.Published,
+                new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            ) { Id = Guid.Parse("c0000000-0000-0000-0000-000000000001") },
+            new Content(
+                "Upcoming Annual Meetup",
+                "Don't forget to register for the upcoming annual meetup in December. We have some great speakers lined up!",
+                ContentType.Notice,
+                Guid.Parse("a1111111-1111-1111-1111-111111111111"),
+                ContentStatus.Published,
+                new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc)
+            ) { Id = Guid.Parse("c0000000-0000-0000-0000-000000000002") },
+            new Content(
+                "Career Services Workshop",
+                "Join our career services workshop next week to learn about the latest industry trends and how to improve your resume.",
+                ContentType.News,
+                Guid.Parse("a1111111-1111-1111-1111-111111111111"),
+                ContentStatus.Published,
+                new DateTime(2024, 3, 1, 0, 0, 0, DateTimeKind.Utc)
+            ) { Id = Guid.Parse("c0000000-0000-0000-0000-000000000003") }
+        };
+
+        foreach (var content in contents)
+        {
+            content.CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            content.UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        }
+
+        modelBuilder.Entity<Content>().HasData(contents);
     }
 }

@@ -50,6 +50,9 @@
 						<a href="/events" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
 							Events
 						</a>
+						<a href="/news" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
+							News
+						</a>
 						<a href="/about" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
 							About
 						</a>
@@ -124,6 +127,9 @@
 							</a>
 							<a href="/events" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
 								Events
+							</a>
+							<a href="/news" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
+								News
 							</a>
 							<a href="/about" class="text-gray-700 hover:text-primary-600 block px-3 py-2 rounded-md text-base font-medium">
 								About
@@ -210,6 +216,7 @@
 					<ul class="space-y-2">
 						<li><a href="/alumni" class="text-gray-300 hover:text-white">Alumni Directory</a></li>
 						<li><a href="/events" class="text-gray-300 hover:text-white">Events</a></li>
+						<li><a href="/news" class="text-gray-300 hover:text-white">News & Updates</a></li>
 						<li><a href="/about" class="text-gray-300 hover:text-white">About Us</a></li>
 						<li><a href="/contact" class="text-gray-300 hover:text-white">Contact</a></li>
 					</ul>

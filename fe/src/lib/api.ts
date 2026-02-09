@@ -1,5 +1,5 @@
 // API service for backend communication
-const API_BASE_URL = "http://localhost:5337";
+const API_BASE_URL = "http://localhost:5037";
 
 export interface ApiResponse<T> {
 	success: boolean;
@@ -135,6 +135,45 @@ export interface NavigationGroup {
 export interface UserNavigation {
 	groups: NavigationGroup[];
 	flatItems: NavigationItem[];
+}
+
+export enum ContentType {
+	News = 0,
+	Notice = 1,
+	Resource = 2,
+}
+
+export enum ContentStatus {
+	Draft = 0,
+	Published = 1,
+	Archived = 2,
+}
+
+export interface Content {
+	id: string;
+	title: string;
+	body: string;
+	type: ContentType;
+	status: ContentStatus;
+	publishDate?: string;
+	createdBy: string;
+	creatorName: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface CreateContentRequest {
+	title: string;
+	body: string;
+	type: ContentType;
+	status?: ContentStatus;
+	publishDate?: string;
+}
+
+export interface UpdateContentRequest {
+	title: string;
+	body: string;
+	type: ContentType;
 }
 
 class ApiService {
@@ -312,6 +351,58 @@ class ApiService {
 		roleId: string,
 	): Promise<ApiResponse<UserNavigation>> {
 		return this.request<UserNavigation>(`/api/navigation/role/${roleId}`);
+	}
+
+	// Content endpoints
+	async getPublishedContent(
+		type?: ContentType,
+	): Promise<ApiResponse<Content[]>> {
+		const query = type !== undefined ? `?type=${type}` : "";
+		return this.request<Content[]>(`/api/content${query}`);
+	}
+
+	async getAdminContent(type?: ContentType): Promise<ApiResponse<Content[]>> {
+		const query = type !== undefined ? `?type=${type}` : "";
+		return this.request<Content[]>(`/api/content/admin${query}`);
+	}
+
+	async getContentById(id: string): Promise<ApiResponse<Content>> {
+		return this.request<Content>(`/api/content/${id}`);
+	}
+
+	async createContent(
+		contentData: CreateContentRequest,
+	): Promise<ApiResponse<Content>> {
+		return this.request<Content>("/api/content", {
+			method: "POST",
+			body: JSON.stringify(contentData),
+		});
+	}
+
+	async updateContent(
+		id: string,
+		contentData: UpdateContentRequest,
+	): Promise<ApiResponse<Content>> {
+		return this.request<Content>(`/api/content/${id}`, {
+			method: "PUT",
+			body: JSON.stringify(contentData),
+		});
+	}
+
+	async deleteContent(id: string): Promise<ApiResponse<boolean>> {
+		return this.request<boolean>(`/api/content/${id}`, {
+			method: "DELETE",
+		});
+	}
+
+	async publishContent(
+		id: string,
+		publishDate?: string,
+	): Promise<ApiResponse<Content>> {
+		return this.request<Content>(`/api/content/${id}/publish`, {
+			method: "POST",
+			body: JSON.stringify({ publishDate }),
+		});
 	}
 
 	// Utility methods
