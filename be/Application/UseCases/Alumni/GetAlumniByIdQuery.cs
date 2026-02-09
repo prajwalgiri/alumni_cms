@@ -13,16 +13,21 @@ public record GetAlumniByIdQuery : IRequest<ApiResponse<AlumniResponse>>
 public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, ApiResponse<AlumniResponse>>
 {
     private readonly IAlumniRepository _alumniRepository;
+    private readonly IUserRepository _userRepository;
 
-    public GetAlumniByIdQueryHandler(IAlumniRepository alumniRepository)
+    public GetAlumniByIdQueryHandler(IAlumniRepository alumniRepository,IUserRepository userRepository)
     {
         _alumniRepository = alumniRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<ApiResponse<AlumniResponse>> Handle(GetAlumniByIdQuery request, CancellationToken cancellationToken)
     {
         var alumni = await _alumniRepository.GetByIdAsync(request.Id);
+
         
+
+
         if (alumni == null)
         {
             return new ApiResponse<AlumniResponse>
@@ -61,14 +66,17 @@ public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, Api
             CreatedAt = alumni.CreatedAt,
             UpdatedAt = alumni.UpdatedAt
         };
-        if(alumni.User is not null)
+
+        var user = await _userRepository.GetByIdAsync(alumni.UserId);
+
+        if (user is not null)
         {
             response.User = new UserResponse
             {
-                Id = alumni.User.Id,
-                FirstName = alumni.User.FirstName,
-                LastName = alumni.User.LastName,
-                Email = alumni.User.Email,
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
               
             };
         }
