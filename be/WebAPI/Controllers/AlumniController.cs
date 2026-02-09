@@ -43,6 +43,7 @@ public class AlumniController : ControllerBase
             GraduationYear = request.GraduationYear,
             Degree = request.Degree,
             Major = request.Major,
+            Faculty = request.Faculty,
             CurrentCompany = request.CurrentCompany,
             CurrentPosition = request.CurrentPosition,
             Location = request.Location,
@@ -68,6 +69,7 @@ public class AlumniController : ControllerBase
             GraduationYear = request.GraduationYear,
             Degree = request.Degree,
             Major = request.Major,
+            Faculty = request.Faculty,
             CurrentCompany = request.CurrentCompany,
             CurrentPosition = request.CurrentPosition,
             Location = request.Location,
@@ -79,6 +81,30 @@ public class AlumniController : ControllerBase
         };
 
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpGet("years")]
+    public async Task<ActionResult<ApiResponse<List<int>>>> GetYears()
+    {
+        var query = new GetGraduationYearsQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("degrees")]
+    public async Task<ActionResult<ApiResponse<List<DegreeMajorsResponse>>>> GetDegrees()
+    {
+        var query = new GetDegreesWithMajorsQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("majors")]
+    public async Task<ActionResult<ApiResponse<List<string>>>> GetMajors([FromQuery] string? degree)
+    {
+        var query = new GetMajorsQuery { Degree = degree };
+        var result = await _mediator.Send(query);
         return Ok(result);
     }
 

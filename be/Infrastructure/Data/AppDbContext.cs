@@ -69,6 +69,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.GraduationYear).HasColumnName("graduation_year").IsRequired();
             entity.Property(e => e.Degree).HasColumnName("degree").IsRequired();
             entity.Property(e => e.Major).HasColumnName("major").IsRequired();
+            entity.Property(e => e.Faculty).HasColumnName("faculty");
             entity.Property(e => e.CurrentCompany).HasColumnName("current_company");
             entity.Property(e => e.CurrentPosition).HasColumnName("current_position");
             entity.Property(e => e.Location).HasColumnName("location");

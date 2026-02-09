@@ -6,6 +6,7 @@ public class Alumni : BaseEntity
     public int GraduationYear { get; private set; }
     public string Degree { get; private set; }
     public string Major { get; private set; }
+    public string? Faculty { get; private set; }
     public string? CurrentCompany { get; private set; }
     public string? CurrentPosition { get; private set; }
     public string? Location { get; private set; }
@@ -23,12 +24,13 @@ public class Alumni : BaseEntity
 
     public Alumni(Guid userId, int graduationYear, string degree, string major, string? currentCompany = null, 
         string? currentPosition = null, string? location = null, string? bio = null, string? linkedinUrl = null, 
-        string? githubUrl = null, string? websiteUrl = null, string? profileImageUrl = null, bool isPublic = true)
+        string? githubUrl = null, string? websiteUrl = null, string? profileImageUrl = null, bool isPublic = true, string? faculty = null)
     {
         UserId = userId;
         GraduationYear = graduationYear;
         Degree = degree;
         Major = major;
+        Faculty = faculty;
         CurrentCompany = currentCompany;
         CurrentPosition = currentPosition;
         Location = location;
@@ -40,13 +42,14 @@ public class Alumni : BaseEntity
         IsPublic = isPublic;
     }
 
-    public void UpdateProfile(int graduationYear, string degree, string major, string? currentCompany, 
+    public void UpdateProfile(int graduationYear, string degree, string major, string? faculty, string? currentCompany,
         string? currentPosition, string? location, string? bio, string? linkedinUrl, string? githubUrl, 
         string? websiteUrl, string? profileImageUrl, bool isPublic)
     {
         GraduationYear = graduationYear;
         Degree = degree;
         Major = major;
+        Faculty = faculty;
         CurrentCompany = currentCompany;
         CurrentPosition = currentPosition;
         Location = location;

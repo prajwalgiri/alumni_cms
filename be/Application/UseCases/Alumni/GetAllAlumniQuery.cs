@@ -27,6 +27,7 @@ public class GetAllAlumniQueryHandler : IRequestHandler<GetAllAlumniQuery, ApiRe
             GraduationYear = a.GraduationYear,
             Degree = a.Degree,
             Major = a.Major,
+            Faculty = a.Faculty,
             CurrentCompany = a.CurrentCompany,
             CurrentPosition = a.CurrentPosition,
             Location = a.Location,
