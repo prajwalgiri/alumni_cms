@@ -65,6 +65,24 @@ $DoBe = ($Mode -eq "be" -or $Mode -eq "all")
 # ---------------------------
 # Helpers
 # ---------------------------
+function Read-HostWithTimeout {
+    param(
+        [string]$Prompt,
+        [int]$TimeoutSeconds = 5
+    )
+
+    Write-Host "$Prompt (auto-continue in $TimeoutSeconds seconds...)"
+
+    $end = (Get-Date).AddSeconds($TimeoutSeconds)
+    while ((Get-Date) -lt $end) {
+        if ([Console]::KeyAvailable) {
+            [Console]::ReadKey($true) | Out-Null
+            return
+        }
+        Start-Sleep -Milliseconds 200
+    }
+}
+
 function Ensure-Dir([string]$path) {
     if (-not (Test-Path -LiteralPath $path)) {
         New-Item -ItemType Directory -Force -Path $path | Out-Null
@@ -233,5 +251,5 @@ Info "DONE."
 if ($DoFe) { Info "FE: http://<your-ip>:$FePort/" }
 if ($DoBe) { Info "BE: http://<your-ip>:$BePort/" }
 
-Read-Host "Press Enter to exit..."
+Read-HostWithTimeout "Press Enter to exit..."
 exit 0

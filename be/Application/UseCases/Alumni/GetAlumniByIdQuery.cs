@@ -77,8 +77,16 @@ public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, Api
             UpdatedAt = alumni.UpdatedAt
         };
 
+        response.User = new UserResponse
+        {
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
 
-        
+        };
+
+
+
             return new ApiResponse<AlumniResponse>
             {
                 Success = true,

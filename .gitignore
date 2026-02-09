@@ -28,3 +28,4 @@ vite.config.ts.timestamp-*
 /alumni-backend-netcore/AlumniBackendApi/obj/Debug/net9.0
 /alumni-backend-netcore/AlumniBackendApi/obj/Release/net9.0
 /alumni-backend-netcore/AlumniBackendApi/obj
+.deploy_state/be_last_state.txt
