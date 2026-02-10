@@ -5,7 +5,7 @@ on:
     branches: [ "eature/dotnet" ]
   pull_request:
     branches: [ "eature/dotnet" ]
-  workflow_dispatch:
+ # workflow_dispatch:
 
 permissions:
   contents: read
