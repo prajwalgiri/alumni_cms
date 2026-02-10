@@ -1,0 +1,48 @@
+name: Build & Artifact (Node)
+
+on:
+  push:
+    branches: [ "feature/dotnet" ]
+  pull_request:
+    branches: [ "feature/dotnet" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fe
+    env:
+      ARTIFACT_NAME: web_build
+      BUILD_DIR: build   # or .svelte-kit/output / dist etc.
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install pnpm
+        run: corepack enable
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.BUILD_DIR }}
+          if-no-files-found: error
+          retention-days: 14
