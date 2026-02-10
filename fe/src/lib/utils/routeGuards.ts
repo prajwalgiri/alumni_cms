@@ -1,5 +1,6 @@
 import { goto } from '$app/navigation';
 import { apiService } from '$lib/api';
+import { hasRequiredRole } from '$lib/utils/roles';
 
 export interface RouteGuardOptions {
   requireAuth?: boolean;
@@ -24,7 +25,7 @@ export function createRouteGuard(options: RouteGuardOptions = {}) {
     // Check roles if specified
     if (requiredRoles.length > 0) {
       const user = apiService.getCurrentUserFromStorage();
-      if (!user || !requiredRoles.includes(user.roleName)) {
+      if (!user || !hasRequiredRole(user.roleName, requiredRoles)) {
         goto('/dashboard');
         return false;
       }
@@ -38,7 +39,7 @@ export function createRouteGuard(options: RouteGuardOptions = {}) {
 export const requireAuth = createRouteGuard({ requireAuth: true });
 export const requireAdmin = createRouteGuard({ 
   requireAuth: true, 
-  requiredRoles: ['Admin', 'SuperAdmin'],
+  requiredRoles: ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'],
   redirectTo: '/dashboard'
 });
 

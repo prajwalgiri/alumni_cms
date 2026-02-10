@@ -1,21 +1,23 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { get } from 'svelte/store';
 	import { apiService } from '$lib/api';
 	import { isAdminRole } from '$lib/utils/roles';
 	import { 
 		Save, 
 		X, 
 		User, 
-		GraduationCap, 
 		Building, 
 		MapPin,
 		Globe,
-		Link,
-		Upload
+		Link
 	} from 'lucide-svelte';
-	let loading = false;
+	
+	let loading = true;
 	let saving = false;
+	let alumniId = '';
 	let formData = {
 		graduation_year: new Date().getFullYear(),
 		degree: '',
@@ -36,7 +38,7 @@
 		'Medicine', 'Law', 'Education', 'Social Sciences', 'Humanities', 'Other'
 	];
 	
-	onMount(() => {
+	onMount(async () => {
 		// Check if user is authenticated and is admin
 		if (!apiService.isAuthenticated()) {
 			goto('/auth/login');
@@ -48,21 +50,70 @@
 			goto('/dashboard');
 			return;
 		}
+
+		const paramId = get(page).params.id;
+		if (!paramId) {
+			goto('/admin/alumni');
+			return;
+		}
+		try {
+			const candidateIds = Array.from(
+				new Set([paramId, paramId.toUpperCase(), paramId.toLowerCase()]),
+			);
+
+			let loaded = false;
+			for (const candidateId of candidateIds) {
+				const response = await apiService.getAlumniById(candidateId);
+				if (response.success && response.data) {
+					alumniId = candidateId;
+					const data: any = response.data;
+          console.log(data," this is data");
+					formData = {
+						graduation_year: data.graduationYear ?? new Date().getFullYear(),
+						degree: data.degree ?? '',
+						major: data.major ?? '',
+						current_company: data.currentCompany ?? '',
+						current_position: data.currentPosition ?? '',
+						location: data.location ?? '',
+						bio: data.bio ?? '',
+						linkedin_url: data.linkedin_url ?? '',
+						github_url: data.github_url ?? '',
+						website_url: data.website_url ?? '',
+						is_public: data.is_public ?? true
+					};
+					loaded = true;
+					break;
+				}
+			}
+
+			if (!loaded) {
+				alert('Unable to load alumni profile. The ID might be case-sensitive.');
+				goto('/admin/alumni');
+				return;
+			}
+		} catch (error) {
+			console.error('Error loading alumni:', error);
+			alert('Error loading alumni profile. Please try again.');
+			goto('/admin/alumni');
+			return;
+		} finally {
+			loading = false;
+		}
 	});
 	
 	async function handleSubmit() {
 		saving = true;
 		
 		try {
-			const response = await apiService.createAlumni(formData);
+			const response = await apiService.updateAlumni(alumniId, formData);
 			if (response.success) {
 				goto('/admin/alumni');
 			} else {
-				alert('Error creating alumni profile: ' + response.message);
+				alert('Error updating alumni profile: ' + response.message);
 			}
 		} catch (error) {
-			console.error('Error creating alumni:', error);
-			alert('Error creating alumni profile. Please try again.');
+			console.error('Error updating alumni:', error);
+			alert('Error updating alumni profile. Please try again.');
 		} finally {
 			saving = false;
 		}
@@ -74,7 +125,7 @@
 </script>
 
 <svelte:head>
-	<title>Add New Alumni - Admin CMS</title>
+	<title>Edit Alumni - Admin CMS</title>
 </svelte:head>
 
 {#if loading}
@@ -86,8 +137,8 @@
 	<div class="mb-8">
 		<div class="flex items-center justify-between">
 			<div>
-				<h1 class="text-3xl font-bold text-gray-900">Add New Alumni</h1>
-				<p class="text-gray-600 mt-2">Create a new alumni profile</p>
+				<h1 class="text-3xl font-bold text-gray-900">Edit Alumni</h1>
+				<p class="text-gray-600 mt-2">Update the alumni profile</p>
 			</div>
 			<div class="flex items-center space-x-3">
 				<button on:click={handleCancel} class="btn-secondary flex items-center">
@@ -96,7 +147,7 @@
 				</button>
 				<button on:click={handleSubmit} disabled={saving} class="btn-primary flex items-center">
 					<Save class="h-5 w-5 mr-2" />
-					{saving ? 'Saving...' : 'Save Alumni'}
+					{saving ? 'Saving...' : 'Save Changes'}
 				</button>
 			</div>
 		</div>
@@ -267,7 +318,10 @@
 
 		<!-- Settings -->
 		<div class="card">
-			<h2 class="text-lg font-semibold text-gray-900 mb-6">Settings</h2>
+			<h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
+				<User class="h-5 w-5 mr-2" />
+				Settings
+			</h2>
 			
 			<div class="flex items-center">
 				<input
@@ -276,21 +330,13 @@
 					bind:checked={formData.is_public}
 					class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
 				/>
-				<label for="is_public" class="ml-2 block text-sm text-gray-900">
+				<label for="is_public" class="ml-2 block text-sm text-gray-700">
 					Make profile public
 				</label>
 			</div>
-			<p class="text-sm text-gray-500 mt-1">Public profiles will be visible to other alumni in the network.</p>
-		</div>
-
-		<!-- Form Actions -->
-		<div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200">
-			<button type="button" on:click={handleCancel} class="btn-secondary">
-				Cancel
-			</button>
-			<button type="submit" disabled={saving} class="btn-primary">
-				{saving ? 'Saving...' : 'Create Alumni Profile'}
-			</button>
+			<p class="text-xs text-gray-500 mt-1">
+				Public profiles will be visible to other alumni in the network.
+			</p>
 		</div>
 	</form>
 {/if}

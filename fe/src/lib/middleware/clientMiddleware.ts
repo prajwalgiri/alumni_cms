@@ -3,6 +3,7 @@ import { page } from '$app/stores';
 import { get } from 'svelte/store';
 import { apiService } from '$lib/api';
 import type { User } from '$lib/api';
+import { hasRequiredRole, isAdminRole } from '$lib/utils/roles';
 
 export interface MiddlewareOptions {
   requireAuth?: boolean;
@@ -66,9 +67,9 @@ export class ClientMiddleware {
       const requiredRoles = Array.isArray(requireRole) ? requireRole : [requireRole];
       console.log(`[Middleware] Checking role access. User Role: '${this.currentUser.roleName}', Required:`, requiredRoles);
 
-      const hasRequiredRole = requiredRoles.includes(this.currentUser.roleName);
+      const hasRequired = hasRequiredRole(this.currentUser.roleName, requiredRoles);
 
-      if (!hasRequiredRole) {
+      if (!hasRequired) {
         console.warn(`[Middleware] Access denied. User role '${this.currentUser.roleName}' not in`, requiredRoles);
         // Redirect based on user's actual role
         const redirectPath = this.getRedirectPathForRole(this.currentUser.roleName);
@@ -82,18 +83,7 @@ export class ClientMiddleware {
   }
 
   private getRedirectPathForRole(roleName: string): string {
-    switch (roleName) {
-      case 'Admin':
-      case 'SuperAdmin':
-      case 'ADMINMNGR':
-      case 'Staff':
-      case 'Moderator':
-        return '/admin';
-      case 'Alumni':
-      case 'User':
-      default:
-        return '/dashboard';
-    }
+    return isAdminRole(roleName) ? '/admin' : '/dashboard';
   }
 
   // Middleware for admin routes
@@ -137,12 +127,12 @@ export class ClientMiddleware {
     if (!this.currentUser) return false;
 
     const roles = Array.isArray(role) ? role : [role];
-    return roles.includes(this.currentUser.roleName);
+    return hasRequiredRole(this.currentUser.roleName, roles);
   }
 
   // Check if user is admin
   isAdmin(): boolean {
-    return this.hasRole(['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator']);
+    return isAdminRole(this.currentUser?.roleName);
   }
 
   // Check if user is authenticated

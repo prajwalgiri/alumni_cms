@@ -1,6 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { JWT_SECRET } from '$env/static/private';
 import jwt from 'jsonwebtoken';
+import { isAdminRole } from '$lib/utils/roles';
 
 // Define protected routes that require authentication
 const PROTECTED_ROUTES = [
@@ -47,13 +48,24 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET) as any;
+      const emailClaim =
+        decoded.email ||
+        decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+      const idClaim =
+        decoded.id ||
+        decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+      const roleNameClaim =
+        decoded.roleName ||
+        decoded.role ||
+        decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
       user = {
-        id: decoded.id,
-        email: decoded.email,
+        id: idClaim,
+        email: emailClaim,
         firstName: decoded.firstName,
         lastName: decoded.lastName,
         roleId: decoded.roleId,
-        roleName: decoded.roleName
+        roleName: roleNameClaim
       };
       isAuthenticated = true;
 
@@ -85,8 +97,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   // Handle admin route access
   if (isAdminRoute && isAuthenticated) {
-    const adminRoles = ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'];
-    const isAdmin = user?.roleName && adminRoles.includes(user.roleName);
+    const isAdmin = isAdminRole(user?.roleName);
     if (!isAdmin) {
       // Redirect non-admin users to dashboard
       return new Response(null, {
@@ -101,8 +112,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   // Handle authenticated users trying to access auth pages
   if (isAuthenticated && (pathname === '/auth/login' || pathname === '/auth/register')) {
     // Redirect authenticated users to appropriate dashboard
-    const adminRoles = ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'];
-    const isAdmin = user?.roleName && adminRoles.includes(user.roleName);
+    const isAdmin = isAdminRole(user?.roleName);
     const redirectTo = isAdmin ? '/admin' : '/dashboard';
 
     return new Response(null, {

@@ -5,6 +5,7 @@
 	import { authStore } from "$lib/stores/auth";
 	import { apiService } from "$lib/api";
 	import Navigation from "$lib/components/Navigation.svelte";
+	import { isAdminRole } from "$lib/utils/roles";
 	import {
 		Users,
 		Calendar,
@@ -31,6 +32,11 @@
 		}
 
 		user = apiService.getCurrentUserFromStorage();
+
+		if (isAdminRole(user?.roleName)) {
+			goto("/admin");
+			return;
+		}
 	});
 
 	function handleLogout() {

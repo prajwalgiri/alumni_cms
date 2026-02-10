@@ -23,17 +23,6 @@
 
 		user = apiService.getCurrentUserFromStorage();
 
-		// Redirect admins to admin dashboard
-		if (
-			user &&
-			["Admin", "SuperAdmin", "ADMINMNGR", "Staff", "Moderator"].includes(
-				user.roleName,
-			)
-		) {
-			goto("/admin");
-			return;
-		}
-
 		loadDashboardData();
 	});
 

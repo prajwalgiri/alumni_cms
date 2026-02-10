@@ -1,5 +1,6 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
+import { isAdminRole } from '$lib/utils/roles';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
   // Check if user is authenticated
@@ -8,8 +9,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
   }
 
   // Check if user has admin role
-  const adminRoles = ['Admin', 'SuperAdmin', 'ADMINMNGR', 'Staff', 'Moderator'];
-  const isAdmin = adminRoles.includes(locals.user.roleName);
+  const isAdmin = isAdminRole(locals.user.roleName);
 
   if (!isAdmin) {
     throw redirect(302, '/dashboard');

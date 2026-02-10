@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { apiService } from '$lib/api';
+	import { isAdminRole } from '$lib/utils/roles';
 	import { 
 		Save, 
 		X, 
@@ -33,7 +34,7 @@
 		}
 		
 		const user = apiService.getCurrentUserFromStorage();
-		if (user?.roleName !== 'Admin') {
+		if (!user || !isAdminRole(user.roleName)) {
 			goto('/dashboard');
 			return;
 		}

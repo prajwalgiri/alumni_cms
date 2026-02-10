@@ -4,6 +4,7 @@
 	import { page } from "$app/stores";
 	import { apiService } from "$lib/api";
 	import { authStore } from "$lib/stores/auth";
+	import { isAdminRole } from "$lib/utils/roles";
 
 	let email = "";
 	let password = "";
@@ -38,19 +39,18 @@
 				const redirectParam = $page.url.searchParams.get("redirect");
 				const user = response.data.user;
 
+				const isAdmin = isAdminRole(user?.roleName);
+
 				if (redirectParam && redirectParam.startsWith("/")) {
-					// Redirect to the originally requested page
-					goto(redirectParam);
-				} else if (
-					user &&
-					[
-						"Admin",
-						"SuperAdmin",
-						"ADMINMNGR",
-						"Staff",
-						"Moderator",
-					].includes(user.roleName)
-				) {
+					if (isAdmin && redirectParam.startsWith("/dashboard")) {
+						goto("/admin");
+					} else if (!isAdmin && redirectParam.startsWith("/admin")) {
+						goto("/dashboard");
+					} else {
+						// Redirect to the originally requested page
+						goto(redirectParam);
+					}
+				} else if (isAdmin) {
 					// Redirect admin users to admin dashboard
 					goto("/admin");
 				} else {

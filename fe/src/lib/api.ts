@@ -1,5 +1,11 @@
 // API service for backend communication
-const API_BASE_URL = "http://localhost:5337";
+const RAW_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL =
+	typeof RAW_API_BASE_URL === "string" &&
+	RAW_API_BASE_URL.trim() &&
+	RAW_API_BASE_URL.trim() !== "undefined"
+		? RAW_API_BASE_URL.trim().replace(/\/+$/, "")
+		: "";
 
 export interface ApiResponse<T> {
 	success: boolean;
@@ -148,11 +154,64 @@ class ApiService {
 	private baseUrl: string;
 
 	constructor(baseUrl: string = API_BASE_URL) {
-		this.baseUrl = baseUrl;
+		this.baseUrl = this.normalizeBaseUrl(baseUrl);
+		if (!this.baseUrl && import.meta.env.DEV) {
+			console.warn(
+				"VITE_API_BASE_URL is not set. Requests will use relative /api/... paths.",
+			);
+		}
+	}
+
+	private normalizeBaseUrl(baseUrl: string): string {
+		if (!baseUrl || baseUrl === "undefined") return "";
+		return baseUrl.replace(/\/+$/, "");
+	}
+
+	private buildUrl(endpoint: string): string {
+		const normalizedEndpoint = endpoint.startsWith("/")
+			? endpoint
+			: `/${endpoint}`;
+		return `${this.baseUrl}${normalizedEndpoint}`;
+	}
+
+	private decodeTokenPayload(token: string): Record<string, any> | null {
+		const parts = token.split(".");
+		if (parts.length !== 3) return null;
+
+		const normalized = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+		const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
+
+		try {
+			if (typeof atob !== "function") return null;
+			const json = atob(padded);
+			return JSON.parse(json);
+		} catch {
+			return null;
+		}
+	}
+
+	private getValidToken(): string | null {
+		if (typeof window === "undefined") return null;
+		const token = localStorage.getItem("authToken");
+		if (!token) return null;
+
+		const payload = this.decodeTokenPayload(token);
+		if (!payload) {
+			this.logout();
+			return null;
+		}
+
+		const exp = typeof payload.exp === "number" ? payload.exp : null;
+		if (exp && Date.now() >= exp * 1000) {
+			this.logout();
+			return null;
+		}
+
+		return token;
 	}
 
 	private getAuthHeaders(): HeadersInit {
-		const token = localStorage.getItem("authToken");
+		const token = this.getValidToken();
 		console.log(
 			"Using token for request:",
 			token ? "Token present" : "No token",
@@ -190,7 +249,7 @@ class ApiService {
 		endpoint: string,
 		options: RequestInit = {},
 	): Promise<ApiResponse<T>> {
-		const url = `${this.baseUrl}${endpoint}`;
+		const url = this.buildUrl(endpoint);
 		const config: RequestInit = {
 			headers: this.getAuthHeaders(),
 			...options,
@@ -240,6 +299,7 @@ class ApiService {
 	}
 
 	async getAlumniById(id: string): Promise<ApiResponse<Alumni>> {
+    console.log(id," tjs os o")
 		return this.request<Alumni>(`/api/alumni/${id}`);
 	}
 
@@ -340,18 +400,23 @@ class ApiService {
 
 	// Utility methods
 	isAuthenticated(): boolean {
-		return !!localStorage.getItem("authToken");
+		return !!this.getValidToken();
 	}
 
 	logout(): void {
-		localStorage.removeItem("authToken");
-		localStorage.removeItem("user");
+		if (typeof window !== "undefined") {
+			localStorage.removeItem("authToken");
+			localStorage.removeItem("user");
+		}
 		// Clear the auth cookie
-		document.cookie =
-			"authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+		if (typeof document !== "undefined") {
+			document.cookie =
+				"authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+		}
 	}
 
 	getCurrentUserFromStorage(): User | null {
+		if (!this.isAuthenticated()) return null;
 		const userStr = localStorage.getItem("user");
 		return userStr ? JSON.parse(userStr) : null;
 	}
