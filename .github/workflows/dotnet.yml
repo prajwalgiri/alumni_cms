@@ -11,9 +11,8 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -23,9 +22,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore be\WebAPI\Alumni.WebAPI.csproj
     - name: publish
-      run: dotnet publish
+      run: dotnet publish be\WebAPI\Alumni.WebAPI.csproj
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v6.0.0
       with:
@@ -33,6 +32,7 @@ jobs:
         name: fe-api # optional, default is artifact
         # A file, directory or wildcard pattern that describes what to upload
         path: /var/www/alumni_cms
+        
         # The desired behavior if no files are found using the provided path.
     #Available Options:
      # warn: Output a warning but do not fail the action
