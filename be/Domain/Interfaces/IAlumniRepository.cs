@@ -9,4 +9,8 @@ public interface IAlumniRepository : IRepository<Alumni.Domain.Entities.Alumni>
     Task<IEnumerable<Alumni.Domain.Entities.Alumni>> GetByGraduationYearAsync(int year);
     Task<IEnumerable<Alumni.Domain.Entities.Alumni>> GetByMajorAsync(string major);
     Task<IEnumerable<Alumni.Domain.Entities.Alumni>> GetByCompanyAsync(string company);
+    Task<IEnumerable<int>> GetUniqueGraduationYearsAsync();
+    Task<IEnumerable<string>> GetUniqueDegreesAsync();
+    Task<IEnumerable<string>> GetUniqueMajorsAsync(string? degree = null);
+    Task<IDictionary<string, IEnumerable<string>>> GetDegreesWithMajorsAsync();
 }

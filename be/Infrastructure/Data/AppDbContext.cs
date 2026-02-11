@@ -69,6 +69,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.GraduationYear).HasColumnName("graduation_year").IsRequired();
             entity.Property(e => e.Degree).HasColumnName("degree").IsRequired();
             entity.Property(e => e.Major).HasColumnName("major").IsRequired();
+            entity.Property(e => e.Faculty).HasColumnName("faculty");
             entity.Property(e => e.CurrentCompany).HasColumnName("current_company");
             entity.Property(e => e.CurrentPosition).HasColumnName("current_position");
             entity.Property(e => e.Location).HasColumnName("location");
@@ -120,7 +121,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
             entity.Property(e => e.EventId).HasColumnName("event_id").IsRequired();
             entity.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
-            entity.Property(e => e.RegistrationDate).HasColumnName("registration_date").HasDefaultValue(DateTime.UtcNow);
+            entity.Property(e => e.RegistrationDate).HasColumnName("registration_date");
             entity.Property(e => e.Status).HasColumnName("status").HasDefaultValue(RegistrationStatus.Pending);
 
             entity.HasOne(e => e.Event)

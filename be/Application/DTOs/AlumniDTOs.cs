@@ -5,6 +5,7 @@ public class CreateAlumniRequest
     public int GraduationYear { get; set; }
     public string Degree { get; set; } = string.Empty;
     public string Major { get; set; } = string.Empty;
+    public string? Faculty { get; set; }
     public string? CurrentCompany { get; set; }
     public string? CurrentPosition { get; set; }
     public string? Location { get; set; }
@@ -20,6 +21,7 @@ public class UpdateAlumniRequest
     public int GraduationYear { get; set; }
     public string Degree { get; set; } = string.Empty;
     public string Major { get; set; } = string.Empty;
+    public string? Faculty { get; set; }
     public string? CurrentCompany { get; set; }
     public string? CurrentPosition { get; set; }
     public string? Location { get; set; }
@@ -41,6 +43,7 @@ public class AlumniResponse
     public int GraduationYear { get; set; }
     public string Degree { get; set; } = string.Empty;
     public string Major { get; set; } = string.Empty;
+    public string? Faculty { get; set; }
     public string? CurrentCompany { get; set; }
     public string? CurrentPosition { get; set; }
     public string? Location { get; set; }
@@ -62,6 +65,7 @@ public class AlumniListResponse
     public int GraduationYear { get; set; }
     public string Degree { get; set; } = string.Empty;
     public string Major { get; set; } = string.Empty;
+    public string? Faculty { get; set; }
     public string? CurrentCompany { get; set; }
     public string? CurrentPosition { get; set; }
     public string? Location { get; set; }
@@ -70,4 +74,10 @@ public class AlumniListResponse
     public string? GithubUrl { get; set; }
     public string? WebsiteUrl { get; set; }
     public string? ProfileImageUrl { get; set; }
+}
+
+public class DegreeMajorsResponse
+{
+    public string Degree { get; set; } = string.Empty;
+    public List<string> Majors { get; set; } = new();
 }

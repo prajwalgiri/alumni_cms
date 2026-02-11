@@ -64,6 +64,7 @@ public class GetAlumniByIdQueryHandler : IRequestHandler<GetAlumniByIdQuery, Api
             GraduationYear = alumni.GraduationYear,
             Degree = alumni.Degree,
             Major = alumni.Major,
+            Faculty = alumni.Faculty,
             CurrentCompany = alumni.CurrentCompany,
             CurrentPosition = alumni.CurrentPosition,
             Location = alumni.Location,

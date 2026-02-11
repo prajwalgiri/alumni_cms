@@ -11,6 +11,7 @@ public record CreateAlumniCommand : IRequest<ApiResponse<AlumniResponse>>
     public int GraduationYear { get; init; }
     public string Degree { get; init; } = string.Empty;
     public string Major { get; init; } = string.Empty;
+    public string? Faculty { get; init; }
     public string? CurrentCompany { get; init; }
     public string? CurrentPosition { get; init; }
     public string? Location { get; init; }
@@ -70,7 +71,8 @@ public class CreateAlumniCommandHandler : IRequestHandler<CreateAlumniCommand, A
             request.GithubUrl,
             request.WebsiteUrl,
             null,
-            request.IsPublic
+            request.IsPublic,
+            request.Faculty
         );
 
         await _alumniRepository.AddAsync(alumni);
@@ -82,6 +84,9 @@ public class CreateAlumniCommandHandler : IRequestHandler<CreateAlumniCommand, A
         {
             Id = createdAlumni!.Id,
             UserId = createdAlumni.UserId,
+            Email = createdAlumni.User.Email,
+            FirstName = createdAlumni.User.FirstName,
+            LastName = createdAlumni.User.LastName,
             User = new UserResponse
             {
                 Id = createdAlumni.User.Id,
@@ -94,6 +99,7 @@ public class CreateAlumniCommandHandler : IRequestHandler<CreateAlumniCommand, A
             GraduationYear = createdAlumni.GraduationYear,
             Degree = createdAlumni.Degree,
             Major = createdAlumni.Major,
+            Faculty = createdAlumni.Faculty,
             CurrentCompany = createdAlumni.CurrentCompany,
             CurrentPosition = createdAlumni.CurrentPosition,
             Location = createdAlumni.Location,

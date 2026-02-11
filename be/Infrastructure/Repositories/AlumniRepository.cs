@@ -49,4 +49,54 @@ public class AlumniRepository : BaseRepository<Alumni.Domain.Entities.Alumni>, I
             .Where(a => a.CurrentCompany != null && a.CurrentCompany.Contains(company) && a.IsPublic)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<int>> GetUniqueGraduationYearsAsync()
+    {
+        return await _dbSet
+            .Select(a => a.GraduationYear)
+            .Distinct()
+            .OrderByDescending(y => y)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<string>> GetUniqueDegreesAsync()
+    {
+        return await _dbSet
+            .Select(a => a.Degree)
+            .Distinct()
+            .OrderBy(d => d)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<string>> GetUniqueMajorsAsync(string? degree = null)
+    {
+        var query = _dbSet.AsQueryable();
+        if (!string.IsNullOrEmpty(degree))
+        {
+            query = query.Where(a => a.Degree == degree);
+        }
+        return await query
+            .Select(a => a.Major)
+            .Distinct()
+            .OrderBy(m => m)
+            .ToListAsync();
+    }
+
+    public async Task<IDictionary<string, IEnumerable<string>>> GetDegreesWithMajorsAsync()
+    {
+        var data = await _dbSet
+            .GroupBy(a => a.Degree)
+            .Select(g => new
+            {
+                Degree = g.Key,
+                Majors = g.Select(a => a.Major).Distinct().OrderBy(m => m).ToList()
+            })
+            .OrderBy(x => x.Degree)
+            .ToListAsync();
+
+        return data.ToDictionary(
+            x => x.Degree,
+            x => x.Majors.AsEnumerable()
+        );
+    }
 }

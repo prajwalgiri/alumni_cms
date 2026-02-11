@@ -11,6 +11,7 @@ public record UpdateAlumniCommand : IRequest<ApiResponse<AlumniResponse>>
     public int GraduationYear { get; init; }
     public string Degree { get; init; } = string.Empty;
     public string Major { get; init; } = string.Empty;
+    public string? Faculty { get; init; }
     public string? CurrentCompany { get; init; }
     public string? CurrentPosition { get; init; }
     public string? Location { get; init; }
@@ -58,6 +59,7 @@ public class UpdateAlumniCommandHandler : IRequestHandler<UpdateAlumniCommand, A
             request.GraduationYear,
             request.Degree,
             request.Major,
+            request.Faculty,
             request.CurrentCompany,
             request.CurrentPosition,
             request.Location,
@@ -78,6 +80,9 @@ public class UpdateAlumniCommandHandler : IRequestHandler<UpdateAlumniCommand, A
         {
             Id = updatedAlumni!.Id,
             UserId = updatedAlumni.UserId,
+            Email = updatedAlumni.User.Email,
+            FirstName = updatedAlumni.User.FirstName,
+            LastName = updatedAlumni.User.LastName,
             User = new UserResponse
             {
                 Id = updatedAlumni.User.Id,
@@ -90,6 +95,7 @@ public class UpdateAlumniCommandHandler : IRequestHandler<UpdateAlumniCommand, A
             GraduationYear = updatedAlumni.GraduationYear,
             Degree = updatedAlumni.Degree,
             Major = updatedAlumni.Major,
+            Faculty = updatedAlumni.Faculty,
             CurrentCompany = updatedAlumni.CurrentCompany,
             CurrentPosition = updatedAlumni.CurrentPosition,
             Location = updatedAlumni.Location,
